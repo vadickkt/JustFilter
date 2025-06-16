@@ -5,6 +5,20 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
+      <UserSecretsId>871c9a44-c88d-48f8-bae4-610437b26721</UserSecretsId>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Discord.Net" Version="3.17.4" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.6" />
+    </ItemGroup>
 
 </Project>
