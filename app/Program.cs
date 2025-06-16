@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.Interactions;
 using Discord.WebSocket;
 using JustFilter.services;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,11 @@ using IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton(new DiscordSocketClient(config));
         services.AddSingleton<LoggingService>();
         services.AddSingleton<CommandService>();
+        services.AddSingleton(sp =>
+        {
+            var client = sp.GetRequiredService<DiscordSocketClient>();
+            return new InteractionService(client);
+        });
         services.AddHostedService<DiscordStartupService>();
     })
     .Build();
