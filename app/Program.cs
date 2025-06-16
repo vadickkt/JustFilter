@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Discord.WebSocket;
+using JustFilter.app.services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using IHost host = Host.CreateDefaultBuilder(args)
@@ -8,7 +11,8 @@ using IHost host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((context, services) =>
     {
-
+        services.AddSingleton<DiscordSocketClient>();
+        services.AddHostedService<DiscordStartupService>();
     })
     .Build();
 
