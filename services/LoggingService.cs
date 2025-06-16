@@ -1,9 +1,8 @@
-using Discord.Commands;
-
-namespace JustFilter.app.services;
-
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
+
+namespace JustFilter.services;
 
 public class LoggingService
 {

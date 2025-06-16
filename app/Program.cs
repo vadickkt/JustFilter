@@ -1,5 +1,6 @@
-﻿using Discord.WebSocket;
-using JustFilter.app.services;
+﻿using Discord.Commands;
+using Discord.WebSocket;
+using JustFilter.services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,8 +12,10 @@ using IHost host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((_, services) =>
     {
-        services.AddSingleton<DiscordSocketClient>();
+        var config = new DiscordSocketConfig { MessageCacheSize = 200 };
+        services.AddSingleton(new DiscordSocketClient(config));
         services.AddSingleton<LoggingService>();
+        services.AddSingleton<CommandService>();
         services.AddHostedService<DiscordStartupService>();
     })
     .Build();
