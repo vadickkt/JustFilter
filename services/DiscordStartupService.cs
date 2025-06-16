@@ -24,10 +24,10 @@ public class DiscordStartupService(DiscordSocketClient client, CommandService co
         await client.StopAsync();
     }
 
-    private static async Task MessageReceived(SocketMessage messageParam)
+    private static async Task MessageReceived(SocketMessage message)
     {
-        Console.WriteLine($"{messageParam.Content}");
+        if (message.Author.IsBot || message.Author.IsWebhook) return;
+        
+        await message.Channel.SendMessageAsync(message.Content);
     }
-
-
 }
