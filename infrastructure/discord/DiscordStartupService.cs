@@ -1,12 +1,9 @@
 using Discord;
-using Discord.Commands;
-using Discord.Interactions;
 using Discord.WebSocket;
-using JustFilter.services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace JustFilter.Services;
+namespace JustFilter.infrastructure.discord;
 
 public class DiscordStartupService : IHostedService
 {

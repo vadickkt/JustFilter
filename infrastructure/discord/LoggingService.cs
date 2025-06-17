@@ -2,7 +2,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace JustFilter.Services;
+namespace JustFilter.infrastructure.discord;
 
 public class LoggingService
 {

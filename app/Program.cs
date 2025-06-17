@@ -2,11 +2,11 @@
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
-using JustFilter.services;
-using JustFilter.Services;
+using JustFilter.infrastructure.discord;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((_, config) =>
@@ -29,10 +29,13 @@ IHost host = Host.CreateDefaultBuilder(args)
             var client = sp.GetRequiredService<DiscordSocketClient>();
             return new InteractionService(client);
         });
-
+        
         services.AddSingleton<LoggingService>();
         services.AddSingleton<InteractionHandler>();
         services.AddHostedService<DiscordStartupService>();
+        
+        var dbConnectionString = context.Configuration.GetConnectionString("MongoDB:ConnectionString");
+        services.AddSingleton<IMongoClient>(new MongoClient(dbConnectionString));
     })
     .Build();
 
