@@ -2,18 +2,17 @@ using Discord.Interactions;
 
 namespace JustFilter.commands;
 
-public class GeneralCommand : InteractionModuleBase<SocketInteractionContext>
+public class GeneralModule : InteractionModuleBase<SocketInteractionContext>
 {
-    [SlashCommand("help", "Shows the help menu")]
-    public async Task Help()
+    [SlashCommand("ping", "Check bot latency")]
+    public async Task PingAsync()
     {
-        await RespondAsync("Do u need help?");
+        await RespondAsync($"🏓 Pong! Latency: {Context.Client.Latency}ms");
     }
-    
-    [SlashCommand("ping", "Get the bot's ping")]
-    public async Task Ping()
+
+    [SlashCommand("help", "Show help menu")]
+    public async Task HelpAsync()
     {
-        var latency = Context.Client.Latency;
-        await RespondAsync($"🏓 Pong! Latency: {latency}ms");
+        await RespondAsync("Need help? Use `/ping` or `/config-add`.");
     }
 }

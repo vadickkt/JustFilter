@@ -2,7 +2,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace JustFilter.services;
+namespace JustFilter.Services;
 
 public class LoggingService
 {
@@ -11,17 +11,12 @@ public class LoggingService
         client.Log += LogAsync;
         command.Log += LogAsync;
     }
-    private Task LogAsync(LogMessage message)
-    {
-        if (message.Exception is CommandException cmdException)
-        {
-            Console.WriteLine($"[Command/{message.Severity}] {cmdException.Command.Aliases.First()}"
-                              + $" failed to execute in {cmdException.Context.Channel}.");
-            Console.WriteLine(cmdException);
-        }
-        else 
-            Console.WriteLine($"[General/{message.Severity}] {message}");
 
+    private Task LogAsync(LogMessage msg)
+    {
+        Console.WriteLine($"[{msg.Severity}] {msg.Source}: {msg.Message}");
+        if (msg.Exception != null)
+            Console.WriteLine(msg.Exception);
         return Task.CompletedTask;
     }
 }
