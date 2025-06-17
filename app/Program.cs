@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
+using JustFilter.infrastructure.database.mongo;
 using JustFilter.infrastructure.discord;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ IHost host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((context, services) =>
     {
+        var configuration = context.Configuration;
+        var dbConnectionString = configuration["MongoDB:ConnectionString"];
         var discordConfig = new DiscordSocketConfig
         {
             MessageCacheSize = 200,
@@ -34,8 +37,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<InteractionHandler>();
         services.AddHostedService<DiscordStartupService>();
         
-        var dbConnectionString = context.Configuration.GetConnectionString("MongoDB:ConnectionString");
         services.AddSingleton<IMongoClient>(new MongoClient(dbConnectionString));
+        services.AddSingleton<MongoDbContext>();
     })
     .Build();
 
