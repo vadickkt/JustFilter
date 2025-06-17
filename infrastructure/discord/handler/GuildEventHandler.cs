@@ -37,7 +37,7 @@ public class GuildEventHandler
     
     private Task OnJoinedGuildAsync(SocketGuild guild)
     {
-        var discordServer = new DiscordServer
+        var discordServer = new ServerData
         {
             Name = guild.Name,
             ServerId = guild.Id

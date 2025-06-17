@@ -12,30 +12,14 @@ public class DiscordServersRepository
         _dbContext = dbContext;
     }
 
-    public async Task AddServer(DiscordServer server)
+    public async Task AddServer(ServerData server)
     {
-        try
-        {
-            await _dbContext.DiscordServers.InsertOneAsync(server);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        await _dbContext.Servers.InsertOneAsync(server);
     }
 
     public async Task DeleteServerByServerId(ulong serverId)
     {
-        try
-        {
-            var filter = Builders<DiscordServer>.Filter.Eq(x => x.ServerId, serverId);
-            await _dbContext.DiscordServers.DeleteOneAsync(filter);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        var filter = Builders<ServerData>.Filter.Eq(x => x.ServerId, serverId);
+        await _dbContext.Servers.DeleteOneAsync(filter);
     }
 }

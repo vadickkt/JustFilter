@@ -1,10 +1,18 @@
 using Discord;
 using Discord.Interactions;
+using JustFilter.infrastructure.database.mongo.repository;
 
 namespace JustFilter.commands;
 
 public class ConfigurationModule : InteractionModuleBase<SocketInteractionContext>
 {
+    private readonly ConfigRepository _configRepository;
+
+    public ConfigurationModule(ConfigRepository configRepository)
+    {
+        _configRepository = configRepository;
+    }
+    
     [SlashCommand("config-add", "Add a new configuration")]
     public async Task AddConfigAsync()
     {
