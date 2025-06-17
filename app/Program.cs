@@ -28,7 +28,6 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         services.AddSingleton(new DiscordSocketClient(discordConfig));
         services.AddSingleton<CommandService>();
-        
         services.AddSingleton<InteractionService>(sp =>
         {
             var client = sp.GetRequiredService<DiscordSocketClient>();
@@ -43,6 +42,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IMongoClient>(new MongoClient(dbConnectionString));
         services.AddSingleton<MongoDbContext>();
         services.AddSingleton<DiscordServersRepository>();
+        services.AddSingleton<ConfigRepository>();
     })
     .Build();
 
