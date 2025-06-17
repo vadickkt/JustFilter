@@ -2,13 +2,13 @@ using Discord;
 using Discord.Interactions;
 using JustFilter.infrastructure.database.mongo.repository;
 
-namespace JustFilter.commands;
+namespace JustFilter.commands.core;
 
-public class ConfigurationModule : InteractionModuleBase<SocketInteractionContext>
+public class ConfigurationCommand : InteractionModuleBase<SocketInteractionContext>
 {
     private readonly ConfigRepository _configRepository;
 
-    public ConfigurationModule(ConfigRepository configRepository)
+    public ConfigurationCommand(ConfigRepository configRepository)
     {
         _configRepository = configRepository;
     }

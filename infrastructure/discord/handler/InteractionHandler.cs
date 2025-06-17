@@ -21,7 +21,7 @@ public class InteractionHandler
         _interactions = interactions;
         _commands = commands;
         _services = services;
-
+        
         _client.Ready += OnReady;
         _client.InteractionCreated += HandleInteraction;
         _client.MessageReceived += HandleMessageAsync;

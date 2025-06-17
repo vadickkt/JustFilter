@@ -1,6 +1,6 @@
 using Discord.Interactions;
 
-namespace JustFilter.commands;
+namespace JustFilter.commands.core;
 
 public class UtilityCommand : InteractionModuleBase<SocketInteractionContext>
 {

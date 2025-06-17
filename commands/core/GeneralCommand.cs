@@ -1,8 +1,8 @@
 using Discord.Interactions;
 
-namespace JustFilter.commands;
+namespace JustFilter.commands.core;
 
-public class GeneralModule : InteractionModuleBase<SocketInteractionContext>
+public class GeneralCommand : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("ping", "Check bot latency")]
     public async Task PingAsync()
