@@ -27,6 +27,7 @@ public class GuildEventHandler
         _serversRepository = serversRepository;
         
         _client.JoinedGuild += OnJoinedGuildAsync;
+        _client.LeftGuild += OnLeftGuildAsync;
     }
     
     public async Task InitializeAsync()
@@ -42,6 +43,12 @@ public class GuildEventHandler
             ServerId = guild.Id
         };
         _serversRepository.AddServer(discordServer);
+        return Task.CompletedTask;
+    }
+
+    private Task OnLeftGuildAsync(SocketGuild guild)
+    {
+        _serversRepository.DeleteServerByServerId(guild.Id);
         return Task.CompletedTask;
     }
 }
