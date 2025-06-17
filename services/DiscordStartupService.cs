@@ -32,18 +32,13 @@ public class DiscordStartupService : IHostedService {
     {
         var token = configuration["Discord:Token"];
         
-        await commands.AddModulesAsync(
-            assembly: typeof(HelpCommand).Assembly,
-            services: null
-        );
+        await interactionService.AddModulesAsync(typeof(GeneralCommand).Assembly, null);
         
         await client.LoginAsync(TokenType.Bot, token);
         await client.StartAsync();
         
         client.MessageReceived += MessageReceived;
         client.InteractionCreated += HandleInteraction;
-
-        await interactionService.AddModulesAsync(typeof(HelpCommand).Assembly, null);
         client.Ready += ReadyAsync;
     }
 
