@@ -7,5 +7,5 @@ public class MongoDbContext(IMongoClient mongoClient)
 {
     private readonly IMongoDatabase _database = mongoClient.GetDatabase("just-filter");
 
-    public IMongoCollection<DiscordServer> Servers => _database.GetCollection<DiscordServer>("servers");
+    public IMongoCollection<DiscordServer> DiscordServers => _database.GetCollection<DiscordServer>("discord-servers");
 }

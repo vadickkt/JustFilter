@@ -1,4 +1,6 @@
 using Discord.Commands;
+using JustFilter.infrastructure.database.mongo.entities;
+using JustFilter.infrastructure.database.mongo.repository;
 
 namespace JustFilter.infrastructure.discord.handler;
 
@@ -11,13 +13,19 @@ public class GuildEventHandler
     private readonly DiscordSocketClient _client;
     private readonly CommandService _commands;
     private readonly IServiceProvider _services;
+    private readonly DiscordServersRepository _serversRepository;
 
-    public GuildEventHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services)
-    {
+    public GuildEventHandler(
+        DiscordSocketClient client, 
+        CommandService commands,
+        IServiceProvider services,
+        DiscordServersRepository serversRepository
+    ) {
         _client = client;
         _commands = commands;
         _services = services;
-
+        _serversRepository = serversRepository;
+        
         _client.JoinedGuild += OnJoinedGuildAsync;
     }
     
@@ -28,7 +36,12 @@ public class GuildEventHandler
     
     private Task OnJoinedGuildAsync(SocketGuild guild)
     {
-        Console.WriteLine($"Bot was added to server {guild.Name} (ID: {guild.Id})");
+        var discordServer = new DiscordServer
+        {
+            Name = guild.Name,
+            ServerId = guild.Id
+        };
+        _serversRepository.AddServer(discordServer);
         return Task.CompletedTask;
     }
 }
