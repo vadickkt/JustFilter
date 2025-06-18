@@ -30,20 +30,16 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
     }
 
     [SlashCommand("config-delete", "Remove a config")]
-    public async Task DeleteConfigAsync([Summary(description: "config name")] string configName)
+    public async Task DeleteConfigAsync()
     {
-        var guild = Context.Guild;
-        var deleteConfigData = new ChangeConfigData
+        var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
+        if (configs != null)
         {
-            DiscordId = guild.Id,
-            Name = configName
-        };
-        var result = await _configRepository.DeleteConfig(deleteConfigData);
-        if (result == DeletionResult.Deleted)
-        {
-            await RespondAsync($"Config {deleteConfigData.Name} has been deleted");
+            await RespondAsync(
+                embed: DeleteConfigPrinter.PrintDeleteMessage(), 
+                components: DeleteConfigPrinter.BuildConfigDeleteComponents(configs)
+            );
         }
-        else await RespondAsync($"Config {deleteConfigData.Name} was not found and has not been deleted.");
     }
 
     [SlashCommand("config-list", "Get list of all configs")]

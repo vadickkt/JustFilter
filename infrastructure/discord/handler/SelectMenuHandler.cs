@@ -12,9 +12,20 @@ public class SelectMenuHandler : InteractionModuleBase<SocketInteractionContext>
     {
         _configRepository = configRepository;
     }
-
-    [ComponentInteraction("select_config_menu")]
-    public async Task HandleConfigMenuAsync(string[] selectedConfig)
+    
+    [ComponentInteraction("delete_config_menu")]
+    public async Task HandleDeleteConfigMenuAsync(string[] selectedConfig)
+    {
+        foreach (var configId in selectedConfig)
+        {
+            var objectId = ObjectId.Parse(configId);
+            await _configRepository.DeleteConfigByObjectId(objectId);
+        }
+        await RespondAsync("These configs have been successfully deleted");
+    }
+    
+    [ComponentInteraction("edit_config_menu")]
+    public async Task HandleUpdateConfigMenuAsync(string[] selectedConfig)
     {
         var configId = ObjectId.Parse(selectedConfig[0]);
         var oldConfig = _configRepository.GetConfigById(configId);

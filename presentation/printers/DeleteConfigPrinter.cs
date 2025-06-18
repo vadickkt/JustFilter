@@ -4,24 +4,25 @@ using JustFilter.infrastructure.database.mongo.entities;
 
 namespace JustFilter.presentation.printers;
 
-public static class EditConfigPrinter {
-    public static Embed PrintUpdateMessage()
+public static class DeleteConfigPrinter
+{
+    public static Embed PrintDeleteMessage()
     {
         var embedBuilder = new EmbedBuilder()
-            .WithTitle("Update Config")
-            .WithColor(Color.Gold)
-            .WithDescription("Select the config you want to update");
+            .WithTitle("Delete Config")
+            .WithColor(Color.Red)
+            .WithDescription("Select the config you want to delete");
 
         return embedBuilder.Build();
     }
 
-    public static MessageComponent BuildConfigEditComponents(List<ConfigData> configs)
+    public static MessageComponent BuildConfigDeleteComponents(List<ConfigData> configs)
     {
         var menuBuilder = new SelectMenuBuilder()
             .WithPlaceholder("Select a config")
-            .WithCustomId("edit_config_menu")
+            .WithCustomId("delete_config_menu")
             .WithMinValues(1)
-            .WithMaxValues(1);
+            .WithMaxValues(configs.Count);
 
         foreach (var config in configs)
         {

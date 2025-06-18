@@ -29,14 +29,9 @@ public class ConfigRepository
         return result.IsAcknowledged ? UpdationResult.Updated : UpdationResult.NotUpdated;
     }
 
-    public async Task<DeletionResult> DeleteConfig(ChangeConfigData changeConfigData)
+    public async Task DeleteConfigByObjectId(ObjectId id)
     {
-        var result = await _dbContext.Configs.DeleteOneAsync(c =>
-            c.DiscordId == changeConfigData.DiscordId ||
-            c.Name == changeConfigData.Name
-        );
-
-        return result.IsAcknowledged ? DeletionResult.Deleted : DeletionResult.NotDeleted;
+        await _dbContext.Configs.DeleteOneAsync(c => c.Id == id);
     }
 
     public async Task<ConfigData> GetConfigById(ObjectId id)
@@ -44,7 +39,7 @@ public class ConfigRepository
         return await _dbContext.Configs.Find(x => x.Id == id).FirstOrDefaultAsync();
     }
 
-public async Task<List<ConfigData>?> GetAllConfigs(ulong discordId)
+    public async Task<List<ConfigData>?> GetAllConfigs(ulong discordId)
     {
         return await _dbContext.Configs.Find(c => c.DiscordId == discordId).ToListAsync();
     }
