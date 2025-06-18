@@ -66,4 +66,25 @@ public static class EditConfigPrinter
 
         return builder.Build();
     }
+
+    public static Modal PrintEditConfigNameMessage()
+    {
+        var modal = new ModalBuilder()
+            .WithTitle("Update Config")
+            .WithCustomId("new_config_name_modal")
+            .AddTextInput("New Config Name", "new_config_name_id", placeholder: "Example: Religion");
+
+        return modal.Build();
+    }
+    
+    public static Modal PrintEditConfigDescriptionMessage()
+    {
+        var modal = new ModalBuilder()
+            .WithTitle("New Name")
+            .WithCustomId("new_config_name_modal")
+            .AddTextInput("New Config Description", "new_config_description_id", TextInputStyle.Paragraph, 
+                placeholder: "Filter messages about religion");
+
+        return modal.Build();
+    }
 }
