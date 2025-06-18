@@ -9,9 +9,7 @@ public static class ConfigPrinter
     {
         var embedBuilder = new EmbedBuilder()
             .WithTitle("🛠️ Configs: ")
-            .WithColor(Color.Blue)
-            .WithFooter(footer => footer.Text = "JustFilter • Config Viewer")
-            .WithCurrentTimestamp();
+            .WithColor(Color.Blue);
 
         var index = 1;
         foreach (var config in configs)

@@ -60,7 +60,7 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
     {
         var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
         var menuBuilder = new SelectMenuBuilder()
-            .WithPlaceholder("Select an option")
+            .WithPlaceholder("Select a config")
             .WithCustomId("select_config_menu")
             .WithMinValues(1)
             .WithMaxValues(1);

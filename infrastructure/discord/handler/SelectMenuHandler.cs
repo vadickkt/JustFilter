@@ -12,13 +12,21 @@ public class SelectMenuHandler : InteractionModuleBase<SocketInteractionContext>
     {
         _configRepository = configRepository;
     }
-    
+
     [ComponentInteraction("select_config_menu")]
     public async Task HandleConfigMenuAsync(string[] selectedConfig)
     {
         var configId = ObjectId.Parse(selectedConfig[0]);
         var oldConfig = _configRepository.GetConfigById(configId);
-        
+
         await RespondAsync($"selectedConfig: {selectedConfig[0]}");
     }
+
+    [ComponentInteraction("setup_menu")]
+    public async Task HandleSetupMenuAsync(string[] selectedConfigs)
+    {
+        // TODO send it to ai and handle then
+        await RespondAsync($"selectedConfigs: {string.Join(",", selectedConfigs)}");
+    }
+
 }
