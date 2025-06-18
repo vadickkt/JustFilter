@@ -1,5 +1,6 @@
 using JustFilter.data.entities;
 using JustFilter.infrastructure.database.mongo.entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace JustFilter.infrastructure.database.mongo.repository;
@@ -38,12 +39,9 @@ public class ConfigRepository
         return result.IsAcknowledged ? DeletionResult.Deleted : DeletionResult.NotDeleted;
     }
 
-    public async Task<ConfigData> GetConfig(ChangeConfigData changeConfigData)
+    public async Task<ConfigData> GetConfigById(ObjectId id)
     {
-        return await _dbContext.Configs.Find(x => 
-            x.Name == changeConfigData.Name 
-            || x.DiscordId == changeConfigData.DiscordId
-        ).FirstOrDefaultAsync();
+        return await _dbContext.Configs.Find(x => x.Id == id).FirstOrDefaultAsync();
     }
 
 public async Task<List<ConfigData>?> GetAllConfigs(ulong discordId)

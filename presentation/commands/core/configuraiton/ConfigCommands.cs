@@ -1,16 +1,17 @@
 using Discord;
 using Discord.Interactions;
 using JustFilter.data.entities;
+using JustFilter.data.utils;
 using JustFilter.infrastructure.database.mongo.repository;
 using JustFilter.presentation.printers;
 
-namespace JustFilter.presentation.commands.core;
+namespace JustFilter.presentation.commands.core.configuraiton;
 
-public class ConfigurationCommand : InteractionModuleBase<SocketInteractionContext>
+public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
 {
     private readonly ConfigRepository _configRepository;
 
-    public ConfigurationCommand(ConfigRepository configRepository)
+    public ConfigCommands(ConfigRepository configRepository)
     {
         _configRepository = configRepository;
     }
@@ -22,7 +23,7 @@ public class ConfigurationCommand : InteractionModuleBase<SocketInteractionConte
             .WithTitle("Add Config")
             .WithCustomId("new_config")
             .AddTextInput("Config Name", "config_name", placeholder: "Example: Religion")
-            .AddTextInput("Config Description", "config_description", TextInputStyle.Paragraph, 
+            .AddTextInput("Config Description", "config_description", TextInputStyle.Paragraph,
                 placeholder: "Filter messages about religion");
 
         await RespondWithModalAsync(modal.Build());
@@ -44,7 +45,7 @@ public class ConfigurationCommand : InteractionModuleBase<SocketInteractionConte
         }
         else await RespondAsync($"Config {deleteConfigData.Name} was not found and has not been deleted.");
     }
-    
+
     [SlashCommand("config-list", "Get list of all configs")]
     public async Task GetAllConfigsAsync()
     {
@@ -55,19 +56,24 @@ public class ConfigurationCommand : InteractionModuleBase<SocketInteractionConte
     }
 
     [SlashCommand("config-update", "Update a config")]
-    public async Task UpdateConfigAsync([Summary(description: "config name")] string configName)
+    public async Task UpdateConfigAsync()
     {
-        var configs = _configRepository.GetAllConfigs(Context.Guild.Id);
+        var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
         var menuBuilder = new SelectMenuBuilder()
             .WithPlaceholder("Select an option")
-            .WithCustomId("menu-1")
+            .WithCustomId("select_config_menu")
             .WithMinValues(1)
-            .WithMaxValues(1)
-            .AddOption("Option A", "opt-a", "Option B is lying!")
-            .AddOption("Option B", "opt-b", "Option A is telling the truth!");
-        var builder = new ComponentBuilder()
-            .WithSelectMenu(menuBuilder);
-            
+            .WithMaxValues(1);
+        
+        if (configs != null) // TODO propose to creating a new config if configs ist empty
+        {
+            foreach (var config in configs)
+            {
+                menuBuilder.AddOption(config.Name, config.Id.ToString(), config.Description.Truncate(50));
+            }   
+        }
+        
+        var builder = new ComponentBuilder().WithSelectMenu(menuBuilder);
         await RespondAsync(embed: ConfigPrinter.PrintUpdateMessage(), components: builder.Build());
     }
 }
