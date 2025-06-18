@@ -1,3 +1,4 @@
+using JustFilter.data.entities;
 using JustFilter.infrastructure.database.mongo.entities;
 using MongoDB.Driver;
 
@@ -15,6 +16,16 @@ public class ConfigRepository
     public async Task AddConfig(ConfigData config)
     {
         await _dbContext.Configs.InsertOneAsync(config);
+    }
+
+    public async Task<DeletionResult> DeleteConfig(DeleteConfigData deleteConfigData)
+    {
+        var result = await _dbContext.Configs.DeleteOneAsync(c =>
+            c.DiscordId == deleteConfigData.DiscordId ||
+            c.Name == deleteConfigData.Name
+        );
+        
+        return result.IsAcknowledged ? DeletionResult.Deleted : DeletionResult.NotDeleted;
     }
 
     public async Task<List<ConfigData>> GetAllConfigs()
