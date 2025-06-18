@@ -8,7 +8,7 @@ public static class SetupPrinter
     public static Embed BuildListOfAvailableConfigs(List<ConfigData> configs)
     {
         var embedBuilder = new EmbedBuilder()
-            .WithTitle("Select a config to configure JustFilter in a channel")
+            .WithTitle("Select a config to configure JustFilter in a channel or just manage your configs ")
             .WithColor(Color.Blue);
 
         for (var i = 0; i < configs.Count; i++)
@@ -53,8 +53,20 @@ public static class SetupPrinter
     private static List<ButtonBuilder> BuildButtons()
     {
         var addNewConfigButton = new ButtonBuilder()
+            .WithCustomId("create_config_button")
+            .WithLabel("Create Config")
             .WithStyle(ButtonStyle.Success);
         
-        return [addNewConfigButton];
+        var deleteConfigButton = new ButtonBuilder()
+            .WithCustomId("delete_config_button")
+            .WithLabel("Delete Config")
+            .WithStyle(ButtonStyle.Danger);
+        
+        var editConfigButton = new ButtonBuilder()
+            .WithCustomId("edit_config_button")
+            .WithLabel("Edit Config")
+            .WithStyle(ButtonStyle.Primary);
+        
+        return [addNewConfigButton, deleteConfigButton, editConfigButton];
     }
 }

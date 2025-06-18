@@ -1,6 +1,4 @@
-using Discord;
 using Discord.Interactions;
-using JustFilter.data.utils;
 using JustFilter.infrastructure.database.mongo.repository;
 using JustFilter.presentation.printers;
 
@@ -25,6 +23,10 @@ public class SetupCommands : InteractionModuleBase<SocketInteractionContext>
                 embed: SetupPrinter.BuildListOfAvailableConfigs(configs), 
                 components: SetupPrinter.BuildSetupComponents(configs)
             );
+        }
+        else
+        {
+            await RespondAsync("dasdsadas");
         }
         // TODO if else do something
     }

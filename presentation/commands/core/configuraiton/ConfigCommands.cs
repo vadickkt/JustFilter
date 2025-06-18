@@ -52,28 +52,19 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
         var guild = Context.Guild;
         var result = await _configRepository.GetAllConfigs(guild.Id);
         if (result == null) await RespondAsync("No configs found");
-        else await RespondAsync(embed: ConfigPrinter.PrintConfigs(result));
+        else await RespondAsync(embed: GetAllConfigsPrinter.PrintConfigs(result));
     }
 
     [SlashCommand("config-update", "Update a config")]
     public async Task UpdateConfigAsync()
     {
         var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
-        var menuBuilder = new SelectMenuBuilder()
-            .WithPlaceholder("Select a config")
-            .WithCustomId("select_config_menu")
-            .WithMinValues(1)
-            .WithMaxValues(1);
-        
-        if (configs != null) // TODO propose to creating a new config if configs ist empty
+        if (configs != null)
         {
-            foreach (var config in configs)
-            {
-                menuBuilder.AddOption(config.Name, config.Id.ToString(), config.Description.Truncate(50));
-            }   
+            await RespondAsync(
+                embed: EditConfigPrinter.PrintUpdateMessage(), 
+                components: EditConfigPrinter.BuildConfigEditComponents(configs)
+            );
         }
-        
-        var builder = new ComponentBuilder().WithSelectMenu(menuBuilder);
-        await RespondAsync(embed: ConfigPrinter.PrintUpdateMessage(), components: builder.Build());
     }
 }

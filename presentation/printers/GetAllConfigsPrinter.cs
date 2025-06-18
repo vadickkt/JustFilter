@@ -1,9 +1,9 @@
-using Discord; 
+using Discord;
 using JustFilter.infrastructure.database.mongo.entities;
 
 namespace JustFilter.presentation.printers;
 
-public static class ConfigPrinter
+public class GetAllConfigsPrinter
 {
     public static Embed PrintConfigs(List<ConfigData> configs)
     {
@@ -20,16 +20,6 @@ public static class ConfigPrinter
                 inline: false
             );
         }
-
-        return embedBuilder.Build();
-    }
-
-    public static Embed PrintUpdateMessage()
-    {
-        var embedBuilder = new EmbedBuilder()
-            .WithTitle("Update Config")
-            .WithColor(Color.Gold)
-            .WithDescription("Select the config you want to update");
 
         return embedBuilder.Build();
     }

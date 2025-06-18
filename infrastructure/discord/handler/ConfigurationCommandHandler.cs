@@ -3,7 +3,7 @@ using JustFilter.infrastructure.database.mongo.entities;
 using JustFilter.infrastructure.database.mongo.repository;
 using JustFilter.presentation.commands.entities;
 
-namespace JustFilter.presentation.commands.handler;
+namespace JustFilter.infrastructure.discord.handler;
 
 public class ConfigurationCommandHandler : InteractionModuleBase<SocketInteractionContext>
 {
