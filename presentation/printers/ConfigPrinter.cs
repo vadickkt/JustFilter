@@ -18,7 +18,7 @@ public static class ConfigPrinter
         {
             embedBuilder.AddField(
                 $"#{index++} • 🧾 `{config.Name}`",
-                $"📄 **Desciption:** {Truncate(config.Description, 200)}\n🔑 **ID:** `{config.Id}`",
+                $"📄 **Description:** {Truncate(config.Description, 200)}\n🔑 **ID:** `{config.Id}`",
                 inline: false
             );
         }
