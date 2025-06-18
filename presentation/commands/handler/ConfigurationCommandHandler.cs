@@ -1,9 +1,9 @@
 using Discord.Interactions;
-using JustFilter.commands.entities;
 using JustFilter.infrastructure.database.mongo.entities;
 using JustFilter.infrastructure.database.mongo.repository;
+using JustFilter.presentation.commands.entities;
 
-namespace JustFilter.commands.handler;
+namespace JustFilter.presentation.commands.handler;
 
 public class ConfigurationCommandHandler : InteractionModuleBase<SocketInteractionContext>
 {

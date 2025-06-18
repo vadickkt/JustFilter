@@ -28,8 +28,8 @@ public class ConfigRepository
         return result.IsAcknowledged ? DeletionResult.Deleted : DeletionResult.NotDeleted;
     }
 
-    public async Task<List<ConfigData>> GetAllConfigs()
+    public async Task<List<ConfigData>?> GetAllConfigs(ulong discordId)
     {
-        return await _dbContext.Configs.Find(_ => true).ToListAsync();
+        return await _dbContext.Configs.Find(c => c.DiscordId == discordId).ToListAsync();
     }
 }

@@ -1,7 +1,7 @@
 using Discord;
 using Discord.Interactions;
 
-namespace JustFilter.commands.entities;
+namespace JustFilter.presentation.commands.entities;
 
 public class ConfigModal : IModal
 {

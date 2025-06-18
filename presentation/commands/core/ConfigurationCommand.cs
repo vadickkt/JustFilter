@@ -2,8 +2,9 @@ using Discord;
 using Discord.Interactions;
 using JustFilter.data.entities;
 using JustFilter.infrastructure.database.mongo.repository;
+using JustFilter.presentation.printers;
 
-namespace JustFilter.commands.core;
+namespace JustFilter.presentation.commands.core;
 
 public class ConfigurationCommand : InteractionModuleBase<SocketInteractionContext>
 {
@@ -42,5 +43,14 @@ public class ConfigurationCommand : InteractionModuleBase<SocketInteractionConte
             await RespondAsync($"Config {deleteConfigData.Name} has been deleted");
         }
         else await RespondAsync($"Config {deleteConfigData.Name} was not found and has not been deleted.");
+    }
+    
+    [SlashCommand("config-list", "Get list of all configs")]
+    public async Task GetAllConfigsAsync()
+    {
+        var guild = Context.Guild;
+        var result = await _configRepository.GetAllConfigs(guild.Id);
+        if (result == null) await RespondAsync("No configs found");
+        else await RespondAsync(embed: ConfigPrinter.BuildEmbed(result));
     }
 }
