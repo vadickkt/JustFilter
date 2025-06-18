@@ -35,7 +35,6 @@ public class InteractionHandler
     private async Task OnReady()
     {
         await _interactions.RegisterCommandsGloballyAsync();
-        Console.WriteLine("Slash-commands registered");
     }
 
     private async Task HandleInteraction(SocketInteraction interaction)

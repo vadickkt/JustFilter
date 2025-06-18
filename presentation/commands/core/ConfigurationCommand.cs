@@ -51,19 +51,23 @@ public class ConfigurationCommand : InteractionModuleBase<SocketInteractionConte
         var guild = Context.Guild;
         var result = await _configRepository.GetAllConfigs(guild.Id);
         if (result == null) await RespondAsync("No configs found");
-        else await RespondAsync(embed: ConfigPrinter.BuildEmbed(result));
+        else await RespondAsync(embed: ConfigPrinter.PrintConfigs(result));
     }
 
     [SlashCommand("config-update", "Update a config")]
     public async Task UpdateConfigAsync([Summary(description: "config name")] string configName)
     {
-        var modal = new ModalBuilder()
-            .WithTitle("Update Config")
-            .WithCustomId("update_config")
-            .AddTextInput("New Config Name", "new_config_name", placeholder: "Example: Policy")
-            .AddTextInput("New Config Description", "new_config_description", TextInputStyle.Paragraph, 
-                placeholder: "Filter messages about policy");
-
-        await RespondWithModalAsync(modal.Build());
+        var configs = _configRepository.GetAllConfigs(Context.Guild.Id);
+        var menuBuilder = new SelectMenuBuilder()
+            .WithPlaceholder("Select an option")
+            .WithCustomId("menu-1")
+            .WithMinValues(1)
+            .WithMaxValues(1)
+            .AddOption("Option A", "opt-a", "Option B is lying!")
+            .AddOption("Option B", "opt-b", "Option A is telling the truth!");
+        var builder = new ComponentBuilder()
+            .WithSelectMenu(menuBuilder);
+            
+        await RespondAsync(embed: ConfigPrinter.PrintUpdateMessage(), components: builder.Build());
     }
 }

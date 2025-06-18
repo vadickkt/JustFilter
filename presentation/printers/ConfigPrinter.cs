@@ -5,7 +5,7 @@ namespace JustFilter.presentation.printers;
 
 public static class ConfigPrinter
 {
-    public static Embed BuildEmbed(List<ConfigData> configs)
+    public static Embed PrintConfigs(List<ConfigData> configs)
     {
         var embedBuilder = new EmbedBuilder()
             .WithTitle("🛠️ Configs: ")
@@ -22,6 +22,16 @@ public static class ConfigPrinter
                 inline: false
             );
         }
+
+        return embedBuilder.Build();
+    }
+
+    public static Embed PrintUpdateMessage()
+    {
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle("Update Config")
+            .WithColor(Color.Gold)
+            .WithDescription("Select the config you want to update");
 
         return embedBuilder.Build();
     }
