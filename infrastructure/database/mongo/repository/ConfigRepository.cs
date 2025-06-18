@@ -1,4 +1,3 @@
-using JustFilter.data.entities;
 using JustFilter.infrastructure.database.mongo.entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -19,14 +18,9 @@ public class ConfigRepository
         await _dbContext.Configs.InsertOneAsync(config);
     }
 
-    public async Task<UpdationResult> UpdateConfig(ChangeConfigData changeConfigData, ConfigData newConfig)
+    public async Task UpdateConfig(ObjectId id, ConfigData newConfig)
     {
-        var result = await _dbContext.Configs.ReplaceOneAsync(x =>
-                x.DiscordId == changeConfigData.DiscordId ||
-                x.Name == changeConfigData.Name, newConfig
-        );
-
-        return result.IsAcknowledged ? UpdationResult.Updated : UpdationResult.NotUpdated;
+        await _dbContext.Configs.ReplaceOneAsync(x => x.Id == id, newConfig);
     }
 
     public async Task DeleteConfigByObjectId(ObjectId id)

@@ -5,7 +5,7 @@ using JustFilter.presentation.printers;
 
 namespace JustFilter.infrastructure.discord.handler;
 
-public class ButtonHandler : InteractionModuleBase<SocketInteractionContext>
+public class ButtonHandler : InteractionModuleBase<SocketInteractionContext> 
 {
     private readonly ConfigRepository _configRepository;
 
@@ -13,7 +13,7 @@ public class ButtonHandler : InteractionModuleBase<SocketInteractionContext>
     {
         _configRepository = configRepository;
     }
-    
+
     [ComponentInteraction("create_config_button")]
     public async Task CreateConfigButton()
     {
@@ -34,12 +34,12 @@ public class ButtonHandler : InteractionModuleBase<SocketInteractionContext>
         if (configs != null)
         {
             await RespondAsync(
-                embed: DeleteConfigPrinter.PrintDeleteMessage(), 
+                embed: DeleteConfigPrinter.PrintDeleteMessage(),
                 components: DeleteConfigPrinter.BuildConfigDeleteComponents(configs)
             );
         }
     }
-    
+
     [ComponentInteraction("edit_config_button")]
     public async Task EditConfigButton()
     {
@@ -47,9 +47,22 @@ public class ButtonHandler : InteractionModuleBase<SocketInteractionContext>
         if (configs != null)
         {
             await RespondAsync(
-                embed: EditConfigPrinter.PrintUpdateMessage(),
-                components: EditConfigPrinter.BuildConfigEditComponents(configs)
+                embed: EditConfigPrinter.PrintStartUpdateMessage(),
+                components: EditConfigPrinter.BuildStartConfigEditComponents(configs)
             );
         }
     }
+
+    [ComponentInteraction("edit_config_name_button")]
+    public async Task EditConfigNameButton()
+    {
+        
+    }
+    
+    [ComponentInteraction("edit_config_description_button")]
+    public async Task EditConfigDescriptionButton()
+    {
+        
+    }
+
 }

@@ -4,8 +4,9 @@ using JustFilter.infrastructure.database.mongo.entities;
 
 namespace JustFilter.presentation.printers;
 
-public static class EditConfigPrinter {
-    public static Embed PrintUpdateMessage()
+public static class EditConfigPrinter 
+{
+    public static Embed PrintStartUpdateMessage()
     {
         var embedBuilder = new EmbedBuilder()
             .WithTitle("Update Config")
@@ -15,7 +16,7 @@ public static class EditConfigPrinter {
         return embedBuilder.Build();
     }
 
-    public static MessageComponent BuildConfigEditComponents(List<ConfigData> configs)
+    public static MessageComponent BuildStartConfigEditComponents(List<ConfigData> configs)
     {
         var menuBuilder = new SelectMenuBuilder()
             .WithPlaceholder("Select a config")
@@ -29,6 +30,40 @@ public static class EditConfigPrinter {
         }
 
         var builder = new ComponentBuilder().WithSelectMenu(menuBuilder);
+        return builder.Build();
+    }
+
+    public static Embed PrintFinalUpdateMessage(ConfigData config)
+    {
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle("Selected Config")
+            .WithColor(Color.Gold);
+
+        embedBuilder.AddField(
+            name: $"**Name:** `{config.Name}`",
+            value: $"**Description:** `{config.Description}`",
+            inline: false
+        );
+
+        return embedBuilder.Build();
+    }
+
+    public static MessageComponent BuildFinalConfigEditComponents()
+    {
+        var editNameButton = new ButtonBuilder()
+            .WithCustomId("edit_config_name_button")
+            .WithLabel("Edit Name")
+            .WithStyle(ButtonStyle.Secondary);
+
+        var editDescriptionButton = new ButtonBuilder()
+            .WithCustomId("edit_config_description_button")
+            .WithLabel("Edit Description")
+            .WithStyle(ButtonStyle.Secondary);
+
+        var builder = new ComponentBuilder()
+            .WithButton(editNameButton)
+            .WithButton(editDescriptionButton);
+
         return builder.Build();
     }
 }

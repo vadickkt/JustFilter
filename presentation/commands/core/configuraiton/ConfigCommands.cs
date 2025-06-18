@@ -1,7 +1,5 @@
 using Discord;
 using Discord.Interactions;
-using JustFilter.data.entities;
-using JustFilter.data.utils;
 using JustFilter.infrastructure.database.mongo.repository;
 using JustFilter.presentation.printers;
 
@@ -58,8 +56,8 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
         if (configs != null)
         {
             await RespondAsync(
-                embed: EditConfigPrinter.PrintUpdateMessage(), 
-                components: EditConfigPrinter.BuildConfigEditComponents(configs)
+                embed: EditConfigPrinter.PrintStartUpdateMessage(), 
+                components: EditConfigPrinter.BuildStartConfigEditComponents(configs)
             );
         }
     }
