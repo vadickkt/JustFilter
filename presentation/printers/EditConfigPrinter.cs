@@ -48,15 +48,15 @@ public static class EditConfigPrinter
         return embedBuilder.Build();
     }
 
-    public static MessageComponent BuildFinalConfigEditComponents()
+    public static MessageComponent BuildFinalConfigEditComponents(ConfigData config)
     {
         var editNameButton = new ButtonBuilder()
-            .WithCustomId("edit_config_name_button")
+            .WithCustomId($"edit_config_name_button:{config.Id}")
             .WithLabel("Edit Name")
             .WithStyle(ButtonStyle.Secondary);
 
         var editDescriptionButton = new ButtonBuilder()
-            .WithCustomId("edit_config_description_button")
+            .WithCustomId($"edit_config_description_button:{config.Id}")
             .WithLabel("Edit Description")
             .WithStyle(ButtonStyle.Secondary);
 

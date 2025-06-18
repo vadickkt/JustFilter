@@ -2,6 +2,7 @@ using Discord;
 using Discord.Interactions;
 using JustFilter.infrastructure.database.mongo.repository;
 using JustFilter.presentation.printers;
+using MongoDB.Bson;
 
 namespace JustFilter.infrastructure.discord.handler;
 
@@ -53,16 +54,17 @@ public class ButtonHandler : InteractionModuleBase<SocketInteractionContext>
         }
     }
 
-    [ComponentInteraction("edit_config_name_button")]
-    public async Task EditConfigNameButton()
+    [ComponentInteraction("edit_config_name_button:*")]
+    public async Task EditConfigNameButton(string configId)
     {
-        
+        var config = await _configRepository.GetConfigById(ObjectId.Parse(configId));
+        await RespondAsync("config.name: " + config.Name);
     }
     
-    [ComponentInteraction("edit_config_description_button")]
-    public async Task EditConfigDescriptionButton()
+    [ComponentInteraction("edit_config_description_button:*")]
+    public async Task EditConfigDescriptionButton(string configId)
     {
+        var config = await _configRepository.GetConfigById(ObjectId.Parse(configId));
         
     }
-
 }

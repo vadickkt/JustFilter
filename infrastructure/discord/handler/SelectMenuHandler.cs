@@ -33,7 +33,7 @@ public class SelectMenuHandler : InteractionModuleBase<SocketInteractionContext>
 
         await RespondAsync(
             embed: EditConfigPrinter.PrintFinalUpdateMessage(config), 
-            components: EditConfigPrinter.BuildFinalConfigEditComponents()
+            components: EditConfigPrinter.BuildFinalConfigEditComponents(config)
         );
     }
 
