@@ -8,14 +8,14 @@ namespace JustFilter.presentation.commands.handler;
 public class ConfigurationCommandHandler : InteractionModuleBase<SocketInteractionContext>
 {
     private readonly ConfigRepository _configRepository;
-    
+
     public ConfigurationCommandHandler(ConfigRepository configRepository)
     {
         _configRepository = configRepository;
     }
-    
+
     [ModalInteraction("new_config")]
-    public async Task HandleConfigModalAsync(ConfigModal modal)
+    public async Task HandleAddConfigModalAsync(AddConfigModal modal)
     {
         var guild = Context.Guild;
 
@@ -31,4 +31,5 @@ public class ConfigurationCommandHandler : InteractionModuleBase<SocketInteracti
             await RespondAsync($"Config {configData.Name} has been saved.");
         }
     }
+
 }

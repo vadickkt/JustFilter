@@ -32,7 +32,7 @@ public class ConfigurationCommand : InteractionModuleBase<SocketInteractionConte
     public async Task DeleteConfigAsync([Summary(description: "config name")] string configName)
     {
         var guild = Context.Guild;
-        var deleteConfigData = new DeleteConfigData
+        var deleteConfigData = new ChangeConfigData
         {
             DiscordId = guild.Id,
             Name = configName
@@ -52,5 +52,18 @@ public class ConfigurationCommand : InteractionModuleBase<SocketInteractionConte
         var result = await _configRepository.GetAllConfigs(guild.Id);
         if (result == null) await RespondAsync("No configs found");
         else await RespondAsync(embed: ConfigPrinter.BuildEmbed(result));
+    }
+
+    [SlashCommand("config-update", "Update a config")]
+    public async Task UpdateConfigAsync([Summary(description: "config name")] string configName)
+    {
+        var modal = new ModalBuilder()
+            .WithTitle("Update Config")
+            .WithCustomId("update_config")
+            .AddTextInput("New Config Name", "new_config_name", placeholder: "Example: Policy")
+            .AddTextInput("New Config Description", "new_config_description", TextInputStyle.Paragraph, 
+                placeholder: "Filter messages about policy");
+
+        await RespondWithModalAsync(modal.Build());
     }
 }
