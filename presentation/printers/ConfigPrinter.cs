@@ -18,17 +18,11 @@ public static class ConfigPrinter
         {
             embedBuilder.AddField(
                 $"#{index++} • 🧾 `{config.Name}`",
-                $"📄 **Description:** {Truncate(config.Description, 200)}\n🔑 **ID:** `{config.Id}`",
+                $"📄 **Description:** {config.Description}\n🔑 **ID:** `{config.Id}`",
                 inline: false
             );
         }
 
         return embedBuilder.Build();
-    }
-
-    private static string Truncate(string text, int maxLength)
-    {
-        if (string.IsNullOrWhiteSpace(text)) return "—";
-        return text.Length <= maxLength ? text : text.Substring(0, maxLength - 3) + "...";
     }
 }
