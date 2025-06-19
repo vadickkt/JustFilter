@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
+using StackExchange.Redis;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((_, config) =>
@@ -47,6 +48,13 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<DiscordServersRepository>();
         services.AddSingleton<ConfigRepository>();
         services.AddSingleton<ChannelRepository>();
+
+        services.AddSingleton<IConnectionMultiplexer>(sp =>
+        {
+            var redisBaseUrl = configuration["Redis:BaseUrl"] ?? "http://localhost:6379"; 
+            var redisConfiguration = ConfigurationOptions.Parse(redisBaseUrl, true);
+            return ConnectionMultiplexer.Connect(redisConfiguration);
+        });
     }).Build();
 
 await host.RunAsync();
