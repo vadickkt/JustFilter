@@ -1,3 +1,4 @@
+using JustFilter.infrastructure.database.mongo.channel;
 using JustFilter.infrastructure.database.mongo.config;
 using JustFilter.infrastructure.database.mongo.server;
 using MongoDB.Driver;
@@ -10,4 +11,5 @@ public class MongoDbContext(IMongoClient mongoClient)
 
     public IMongoCollection<ServerData> Servers => _database.GetCollection<ServerData>("discord-servers");
     public IMongoCollection<ConfigData> Configs => _database.GetCollection<ConfigData>("configs");
+    public IMongoCollection<ChannelData> Channels => _database.GetCollection<ChannelData>("channels");
 }

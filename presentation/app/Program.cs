@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
 using JustFilter.infrastructure.database.mongo;
+using JustFilter.infrastructure.database.mongo.channel;
 using JustFilter.infrastructure.database.mongo.config;
 using JustFilter.infrastructure.database.mongo.server;
 using JustFilter.infrastructure.discord.handler.core;
@@ -44,6 +45,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<MongoDbContext>();
         services.AddSingleton<DiscordServersRepository>();
         services.AddSingleton<ConfigRepository>();
+        services.AddSingleton<ChannelRepository>();
     }).Build();
 
 await host.RunAsync();

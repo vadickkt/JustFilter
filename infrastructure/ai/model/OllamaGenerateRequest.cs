@@ -4,7 +4,7 @@ public class OllamaGenerateRequest
 {
     public required string model { get; set; }
     public required string prompt { get; set; }
-    public required bool stream { get; set; }
+    public bool? stream { get; set; }
     public FormatRequest? format { get; set; }
 }
 

@@ -36,4 +36,16 @@ public class ConfigRepository
     {
         return await _dbContext.Configs.Find(c => c.DiscordId == discordId).ToListAsync();
     }
+
+    public async Task<List<ConfigData>> GetManyConfigsByIds(List<ObjectId> ids)
+    {
+        var configs = new List<ConfigData>();
+        foreach (var id in ids)
+        {
+            var config = await _dbContext.Configs.Find(x => x.Id == id).FirstOrDefaultAsync();
+            if (config != null) configs.Add(config);
+        }
+        
+        return configs;
+    }
 }
