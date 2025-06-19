@@ -2,7 +2,7 @@ using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
 
-namespace JustFilter.infrastructure.discord.handler;
+namespace JustFilter.infrastructure.discord.handler.core;
 
 public class InteractionHandler
 {

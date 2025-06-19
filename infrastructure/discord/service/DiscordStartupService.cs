@@ -1,6 +1,7 @@
 using Discord;
 using Discord.WebSocket;
 using JustFilter.infrastructure.discord.handler;
+using JustFilter.infrastructure.discord.handler.core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 

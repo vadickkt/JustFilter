@@ -1,7 +1,7 @@
 using Discord;
-using JustFilter.infrastructure.database.mongo.entities;
+using JustFilter.infrastructure.database.mongo.config;
 
-namespace JustFilter.presentation.printers;
+namespace JustFilter.presentation.printers.setup;
 
 public static class SetupPrinter
 {

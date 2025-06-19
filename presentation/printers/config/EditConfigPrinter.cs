@@ -1,6 +1,6 @@
 using Discord;
 using JustFilter.data.utils;
-using JustFilter.infrastructure.database.mongo.entities;
+using JustFilter.infrastructure.database.mongo.config;
 
 namespace JustFilter.presentation.printers;
 

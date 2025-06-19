@@ -1,15 +1,15 @@
 using Discord.Interactions;
-using JustFilter.infrastructure.database.mongo.repository;
+using JustFilter.infrastructure.database.mongo.config;
 using JustFilter.presentation.printers;
 using MongoDB.Bson;
 
-namespace JustFilter.infrastructure.discord.handler;
+namespace JustFilter.infrastructure.discord.handler.config;
 
-public class SelectMenuHandler : InteractionModuleBase<SocketInteractionContext>
+public class ConfigMenuHandler : InteractionModuleBase<SocketInteractionContext>
 {
     private readonly ConfigRepository _configRepository;
 
-    public SelectMenuHandler(ConfigRepository configRepository)
+    public ConfigMenuHandler(ConfigRepository configRepository)
     {
         _configRepository = configRepository;
     }
@@ -36,12 +36,4 @@ public class SelectMenuHandler : InteractionModuleBase<SocketInteractionContext>
             components: EditConfigPrinter.BuildFinalConfigEditComponents(config)
         );
     }
-
-    [ComponentInteraction("setup_menu")]
-    public async Task HandleSetupMenuAsync(string[] selectedConfigs)
-    {
-        // TODO send it to ai and handle then
-        await RespondAsync($"selectedConfigs: {string.Join(",", selectedConfigs)}");
-    }
-
 }

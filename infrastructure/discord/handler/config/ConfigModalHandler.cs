@@ -1,10 +1,10 @@
 using Discord.Interactions;
-using JustFilter.infrastructure.database.mongo.entities;
-using JustFilter.infrastructure.database.mongo.repository;
+using JustFilter.infrastructure.database.mongo.config;
 using JustFilter.presentation.commands.entities;
+using JustFilter.presentation.commands.entities.config;
 using MongoDB.Bson;
 
-namespace JustFilter.infrastructure.discord.handler;
+namespace JustFilter.infrastructure.discord.handler.config;
 
 public class ConfigModalHandler : InteractionModuleBase<SocketInteractionContext>
 {

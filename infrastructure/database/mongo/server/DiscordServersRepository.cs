@@ -1,7 +1,6 @@
-using JustFilter.infrastructure.database.mongo.entities;
 using MongoDB.Driver;
 
-namespace JustFilter.infrastructure.database.mongo.repository;
+namespace JustFilter.infrastructure.database.mongo.server;
 
 public class DiscordServersRepository
 {

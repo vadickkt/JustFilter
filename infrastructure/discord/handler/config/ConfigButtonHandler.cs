@@ -1,17 +1,15 @@
 using Discord;
 using Discord.Interactions;
-using JustFilter.infrastructure.database.mongo.repository;
-using JustFilter.presentation.commands.entities;
+using JustFilter.infrastructure.database.mongo.config;
 using JustFilter.presentation.printers;
-using MongoDB.Bson;
 
-namespace JustFilter.infrastructure.discord.handler;
+namespace JustFilter.infrastructure.discord.handler.config;
 
-public class ButtonHandler : InteractionModuleBase<SocketInteractionContext> 
+public class ConfigButtonHandler : InteractionModuleBase<SocketInteractionContext> 
 {
     private readonly ConfigRepository _configRepository;
 
-    public ButtonHandler(ConfigRepository configRepository)
+    public ConfigButtonHandler(ConfigRepository configRepository)
     {
         _configRepository = configRepository;
     }

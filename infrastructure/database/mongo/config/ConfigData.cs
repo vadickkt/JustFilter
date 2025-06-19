@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace JustFilter.infrastructure.database.mongo.entities;
+namespace JustFilter.infrastructure.database.mongo.config;
 
 public class ConfigData
 {

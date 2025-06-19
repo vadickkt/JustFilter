@@ -1,4 +1,5 @@
-using JustFilter.infrastructure.database.mongo.entities;
+using JustFilter.infrastructure.database.mongo.config;
+using JustFilter.infrastructure.database.mongo.server;
 using MongoDB.Driver;
 
 namespace JustFilter.infrastructure.database.mongo;

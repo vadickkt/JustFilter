@@ -1,9 +1,8 @@
 using Discord.Commands;
-using JustFilter.infrastructure.database.mongo.entities;
-using JustFilter.infrastructure.database.mongo.repository;
 using Discord.WebSocket;
+using JustFilter.infrastructure.database.mongo.server;
 
-namespace JustFilter.infrastructure.discord.handler;
+namespace JustFilter.infrastructure.discord.handler.core;
 
 public class GuildEventHandler
 {
