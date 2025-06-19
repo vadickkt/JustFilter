@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace JustFilter.infrastructure.database.mongo.channel;
@@ -29,7 +30,16 @@ public class ChannelRepository
 
     public async Task UpdateChannel(ChannelData channel)
     {
-        var result = await _dbContext.Channels.ReplaceOneAsync(c => c.ChannelId == channel.ChannelId && c.ServerId == channel.ServerId, channel);
-        Console.WriteLine($"result: {result.ModifiedCount}");
+        Filter filter = c => c.ChannelId == channel.ChannelId && c.ServerId == channel.ServerId;
+        await _dbContext.Channels.ReplaceOneAsync(filter, channel);
     }
+
+    public async Task DeleteConfigsInChannel(ulong serverId, ulong channelId)
+    {
+        var filter = Builders<ChannelData>.Filter.Where(c => c.ServerId == serverId && c.ChannelId == channelId);
+        var update = Builders<ChannelData>.Update.Set(c => c.ConfigsIds, []);
+
+        await _dbContext.Channels.UpdateOneAsync(filter, update);
+    }
+
 }
