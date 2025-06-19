@@ -51,7 +51,7 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
-            var redisBaseUrl = configuration["Redis:BaseUrl"] ?? "http://localhost:6379"; 
+            var redisBaseUrl = configuration["Redis:ConnectionString"] ?? "http://localhost:6379"; 
             var redisConfiguration = ConfigurationOptions.Parse(redisBaseUrl, true);
             return ConnectionMultiplexer.Connect(redisConfiguration);
         });
