@@ -17,6 +17,7 @@ public class SetupCommands : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("setup", "Setup JustFilter in a channel")]
     public async Task SetupAsync()
     {
+        // Баг, приложение не может получить список конфигов из за этого не отвечает вначале
         var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
         if (configs != null)
         {
