@@ -78,11 +78,11 @@ public static class EditConfigPrinter
         return modal.Build();
     }
     
-    public static Modal PrintEditConfigDescriptionMessage()
+    public static Modal PrintEditConfigDescriptionMessage(string configId)
     {
         var modal = new ModalBuilder()
-            .WithTitle("New Name")
-            .WithCustomId("new_config_description_modal")
+            .WithTitle("Update Config")
+            .WithCustomId($"new_config_description_modal:{configId}")
             .AddTextInput("New Config Description", "new_config_description_id", TextInputStyle.Paragraph, 
                 placeholder: "Filter messages about religion");
 

@@ -42,4 +42,14 @@ public class ConfigModalHandler : InteractionModuleBase<SocketInteractionContext
         await _configRepository.UpdateConfig(parsedConfigId, oldConfig);
         await RespondAsync($"Config {configId} has been updated.");
     }
+
+    [ModalInteraction("new_config_description_modal:*")]
+    public async Task HandleEditConfigNameModal(string configId, EditConfigDescriptionModal modal)
+    {
+        var parsedConfigId = ObjectId.Parse(configId);
+        var oldConfig = await _configRepository.GetConfigById(parsedConfigId);
+        oldConfig.Description = modal.NewConfigDescription;
+        await _configRepository.UpdateConfig(parsedConfigId, oldConfig);
+        await RespondAsync($"Config {configId} has been updated.");
+    }
 }

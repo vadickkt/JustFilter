@@ -64,7 +64,6 @@ public class ButtonHandler : InteractionModuleBase<SocketInteractionContext>
     [ComponentInteraction("edit_config_description_button:*")]
     public async Task EditConfigDescriptionButton(string configId)
     {
-        var config = await _configRepository.GetConfigById(ObjectId.Parse(configId));
-        await RespondWithModalAsync(EditConfigPrinter.PrintEditConfigDescriptionMessage());
+        await RespondWithModalAsync(EditConfigPrinter.PrintEditConfigDescriptionMessage(configId));
     }
 }
