@@ -1,4 +1,4 @@
-using JustFilter.infrastructure.database.mongo.config;
+using JustFilter.infrastructure.datastore.mongo.config;
 
 namespace JustFilter.infrastructure.ai.data;
 

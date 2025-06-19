@@ -1,9 +1,9 @@
-using JustFilter.infrastructure.database.mongo.channel;
-using JustFilter.infrastructure.database.mongo.config;
 using JustFilter.infrastructure.database.mongo.server;
+using JustFilter.infrastructure.datastore.mongo.channel;
+using JustFilter.infrastructure.datastore.mongo.config;
 using MongoDB.Driver;
 
-namespace JustFilter.infrastructure.database.mongo;
+namespace JustFilter.infrastructure.datastore.mongo;
 
 public class MongoDbContext(IMongoClient mongoClient)
 {

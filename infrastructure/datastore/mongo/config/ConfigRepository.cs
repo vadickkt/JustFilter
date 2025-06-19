@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace JustFilter.infrastructure.database.mongo.config;
+namespace JustFilter.infrastructure.datastore.mongo.config;
 
 public class ConfigRepository
 {

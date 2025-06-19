@@ -1,5 +1,5 @@
 using Discord.Interactions;
-using JustFilter.infrastructure.database.mongo.config;
+using JustFilter.infrastructure.datastore.mongo.config;
 using JustFilter.presentation.commands.entities;
 using JustFilter.presentation.commands.entities.config;
 using MongoDB.Bson;

@@ -1,6 +1,6 @@
 using Discord.Interactions;
-using JustFilter.infrastructure.database.mongo.channel;
-using JustFilter.infrastructure.database.mongo.config;
+using JustFilter.infrastructure.datastore.mongo.channel;
+using JustFilter.infrastructure.datastore.mongo.config;
 using JustFilter.presentation.printers.setup;
 
 namespace JustFilter.presentation.commands.core.configuration;
@@ -28,11 +28,10 @@ public class ManageCommands : InteractionModuleBase<SocketInteractionContext>
                 components: SetupPrinter.BuildSetupComponents(configs)
             );
         }
-        else
+        else // TODO if else do something
         {
             await RespondAsync("dasdsadas");
         }
-        // TODO if else do something
     }
 
     [SlashCommand("terminate", "Terminal Just Filter in a channel")]

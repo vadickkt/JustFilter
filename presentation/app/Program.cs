@@ -3,9 +3,10 @@ using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
 using JustFilter.infrastructure.database.mongo;
-using JustFilter.infrastructure.database.mongo.channel;
-using JustFilter.infrastructure.database.mongo.config;
 using JustFilter.infrastructure.database.mongo.server;
+using JustFilter.infrastructure.datastore.mongo;
+using JustFilter.infrastructure.datastore.mongo.channel;
+using JustFilter.infrastructure.datastore.mongo.config;
 using JustFilter.infrastructure.discord.handler.core;
 using JustFilter.infrastructure.discord.service;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +40,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<LoggingService>();
         services.AddSingleton<InteractionHandler>();
         services.AddSingleton<GuildEventHandler>();
-        services.AddHostedService<DiscordStartupService>();
+        services.AddHostedService<DiscordManageService>();
         
         services.AddSingleton<IMongoClient>(new MongoClient(dbConnectionString));
         services.AddSingleton<MongoDbContext>();

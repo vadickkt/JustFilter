@@ -1,8 +1,7 @@
 using System.Linq.Expressions;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace JustFilter.infrastructure.database.mongo.channel;
+namespace JustFilter.infrastructure.datastore.mongo.channel;
 
 using Filter = Expression<Func<ChannelData, bool>>;
 

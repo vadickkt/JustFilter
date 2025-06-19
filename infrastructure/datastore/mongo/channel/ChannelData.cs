@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace JustFilter.infrastructure.database.mongo.channel;
+namespace JustFilter.infrastructure.datastore.mongo.channel;
 
 public class ChannelData
 {
