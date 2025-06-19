@@ -1,6 +1,9 @@
+using System.Linq.Expressions;
 using MongoDB.Driver;
 
 namespace JustFilter.infrastructure.database.mongo.channel;
+
+using Filter = Expression<Func<ChannelData, bool>>;
 
 public class ChannelRepository
 {
@@ -10,15 +13,23 @@ public class ChannelRepository
     {
         _dbContext = dbContext;
     }
-
-    public async Task<AddingChanelResult> AddChannelIfNotExist(ChannelData channel)
+    
+    public async Task<(ChannelData ChannelData, bool Existed)> AddChannelIfNotExistAsync(ChannelData channel)
     {
         var existingChannel = await _dbContext.Channels
-            .Find(c => c.Id == channel.Id)
+            .Find(c => c.ChannelId == channel.ChannelId)
             .FirstOrDefaultAsync();
 
-        if (existingChannel != null) return AddingChanelResult.AlreadyExists;
+        if (existingChannel != null) return (existingChannel, true);
+
         await _dbContext.Channels.InsertOneAsync(channel);
-        return AddingChanelResult.Created;
+        return (channel, false);
+    }
+
+
+    public async Task UpdateChannel(ChannelData channel)
+    {
+        var result = await _dbContext.Channels.ReplaceOneAsync(c => c.ChannelId == channel.ChannelId && c.ServerId == channel.ServerId, channel);
+        Console.WriteLine($"result: {result.ModifiedCount}");
     }
 }

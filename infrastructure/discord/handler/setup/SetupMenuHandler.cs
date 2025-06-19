@@ -27,42 +27,35 @@ public class SetupMenuHandler : InteractionModuleBase<SocketInteractionContext>
         var guild = Context.Guild;
         var channel = Context.Channel;
 
+        if (selectedConfigs.Length == 0)
+        {
+            await RespondAsync("No configurations selected.");
+            return;
+        }
+
+        var configIds = selectedConfigs
+            .Select(ObjectId.Parse)
+            .ToList();
+
         var channelData = new ChannelData
         {
             ChannelId = channel.Id,
+            ServerId = guild.Id,
             Name = channel.Name,
+            ConfigsIds = configIds
         };
-        
-        var ids = selectedConfigs.ToList().ConvertAll(ObjectId.Parse);
-        var configs = await _configRepository.GetManyConfigsByIds(ids);
 
-        var addingResult = await _channelRepository.AddChannelIfNotExist(channelData);
+        var result = await _channelRepository.AddChannelIfNotExistAsync(channelData);
 
-
-
+        if (result.Existed)
+        {
+            result.ChannelData.ConfigsIds = configIds;
+            await _channelRepository.UpdateChannel(result.ChannelData);
+            await RespondAsync("Channel configurations have been updated.");
+        }
+        else
+        {
+            await RespondAsync("Channel configurations have been added.");
+        }
     }
-    /*
-     * var httpClient = new HttpClient();
-       const string baseUrl = "http://localhost:11434/api/";
-       var ollamaHttpClient = new OllamaHttpClient(httpClient, baseUrl);
-       var ollamaRequest = new OllamaGenerateRequest
-       {
-           model = "deepseek-r1:latest",
-           prompt = OllamaConst.Prompt("Украина лучше России", configs),
-           stream = false,
-           format = new FormatRequest
-           {
-               type = "object",
-               properties = new Dictionary<string, FormatProperty>
-               {
-                   { "isPolicy", new FormatProperty { type = "boolean" } },
-                   { "explanation", new FormatProperty { type = "string" } }
-               },
-               required = ["isPolicy", "explanation"]
-           }
-       };
-       var result = await ollamaHttpClient.GenerateAsync(ollamaRequest);
-       Console.WriteLine(result);
-       await RespondAsync(result);
-     */
 }
