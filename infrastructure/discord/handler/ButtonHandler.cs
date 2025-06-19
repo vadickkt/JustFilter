@@ -1,6 +1,7 @@
 using Discord;
 using Discord.Interactions;
 using JustFilter.infrastructure.database.mongo.repository;
+using JustFilter.presentation.commands.entities;
 using JustFilter.presentation.printers;
 using MongoDB.Bson;
 
@@ -57,8 +58,7 @@ public class ButtonHandler : InteractionModuleBase<SocketInteractionContext>
     [ComponentInteraction("edit_config_name_button:*")]
     public async Task EditConfigNameButton(string configId)
     {
-        var config = await _configRepository.GetConfigById(ObjectId.Parse(configId));
-        await RespondWithModalAsync(EditConfigPrinter.PrintEditConfigNameMessage());
+        await RespondWithModalAsync(EditConfigPrinter.PrintEditConfigNameMessage(configId));
     }
     
     [ComponentInteraction("edit_config_description_button:*")]

@@ -41,7 +41,8 @@ public static class EditConfigPrinter
 
         embedBuilder.AddField(
             name: $"**Name:** `{config.Name}`",
-            value: $"**Description:** `{config.Description}`",
+            value: $"**Description:** `{config.Description}`\n" +
+                   $"**ConfigId:** ${config.Id}",
             inline: false
         );
 
@@ -67,11 +68,11 @@ public static class EditConfigPrinter
         return builder.Build();
     }
 
-    public static Modal PrintEditConfigNameMessage()
+    public static Modal PrintEditConfigNameMessage(string configId)
     {
         var modal = new ModalBuilder()
             .WithTitle("Update Config")
-            .WithCustomId("new_config_name_modal")
+            .WithCustomId($"new_config_name_modal:{configId}")
             .AddTextInput("New Config Name", "new_config_name_id", placeholder: "Example: Religion");
 
         return modal.Build();
@@ -81,7 +82,7 @@ public static class EditConfigPrinter
     {
         var modal = new ModalBuilder()
             .WithTitle("New Name")
-            .WithCustomId("new_config_name_modal")
+            .WithCustomId("new_config_description_modal")
             .AddTextInput("New Config Description", "new_config_description_id", TextInputStyle.Paragraph, 
                 placeholder: "Filter messages about religion");
 
