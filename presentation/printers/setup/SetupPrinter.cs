@@ -5,6 +5,28 @@ namespace JustFilter.presentation.printers.setup;
 
 public static class SetupPrinter
 {
+    public static MessageComponent BuildHelpButtons()
+    {
+        var builder = new ComponentBuilder();
+            
+        var buttons = BuildButtons();
+        foreach (var button in buttons)
+        {
+            builder.WithButton(button);
+        }
+
+        return builder.Build();
+    }
+    
+    public static Embed BuildHelpMessage()
+    {
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle("You haven't created a config yet, you can do it via commands or buttons below")
+            .WithColor(Color.Blue);
+        
+        return embedBuilder.Build();
+    }
+    
     public static Embed BuildListOfAvailableConfigs(List<ConfigData> configs)
     {
         var embedBuilder = new EmbedBuilder()
