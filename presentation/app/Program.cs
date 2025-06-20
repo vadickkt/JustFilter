@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
+using JustFilter.infrastructure.ai;
 using JustFilter.infrastructure.database.mongo.server;
 using JustFilter.infrastructure.datastore.mongo;
 using JustFilter.infrastructure.datastore.mongo.channel;
@@ -56,6 +57,8 @@ IHost host = Host.CreateDefaultBuilder(args)
             return ConnectionMultiplexer.Connect(redisConfiguration);
         });
         services.AddSingleton<RedisContext>();
+        services.AddSingleton<HttpClient>();
+        services.AddSingleton<OllamaHttpClient>();
     }).Build();
 
 await host.RunAsync();

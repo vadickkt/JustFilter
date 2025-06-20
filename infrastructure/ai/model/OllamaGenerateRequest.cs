@@ -17,5 +17,5 @@ public class FormatRequest
 
 public class FormatProperty
 {
-    public string type { get; set; }
+    public object type { get; set; }
 }

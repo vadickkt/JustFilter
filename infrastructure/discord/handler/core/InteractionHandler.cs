@@ -1,10 +1,10 @@
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
-using JustFilter.infrastructure.datastore.mongo.config;
+using JustFilter.infrastructure.ai;
+using JustFilter.infrastructure.ai.data;
+using JustFilter.infrastructure.ai.model;
 using JustFilter.infrastructure.datastore.redis;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
 namespace JustFilter.infrastructure.discord.handler.core;
 
@@ -15,7 +15,7 @@ public class InteractionHandler
     private readonly CommandService _commands;
     private readonly IServiceProvider _services;
     private readonly RedisContext _redisContext;
-    private readonly ConfigRepository _configRepository;
+    private readonly OllamaHttpClient _ollamaHttpClient;
 
     public InteractionHandler(
         DiscordSocketClient client,
@@ -23,14 +23,14 @@ public class InteractionHandler
         CommandService commands,
         IServiceProvider services,
         RedisContext redisContext,
-        ConfigRepository configRepository
+        OllamaHttpClient ollamaHttpClient
     ) {
         _client = client;
         _interactions = interactions;
         _commands = commands;
         _services = services;
         _redisContext = redisContext;
-        _configRepository = configRepository;
+        _ollamaHttpClient = ollamaHttpClient;
 
         _client.Ready += OnReady;
         _client.InteractionCreated += HandleInteraction;
@@ -78,7 +78,27 @@ public class InteractionHandler
         {
             var messageText = message.Content;
             var configs = _redisContext.GetConfigsAsync(serverId.Value, channelId).Result;
-            // TODO redis cache confis
+            var prompt = OllamaConst.Prompt(messageText, configs);
+            
+            var ollamaRequest = new OllamaGenerateRequest
+            {
+                model = "deepseek-r1:latest",
+                prompt = OllamaConst.Prompt("Украина лучше России", configs),
+                stream = false,
+                format = new FormatRequest
+                {
+                    type = "object",
+                    properties = new Dictionary<string, FormatProperty>
+                    {
+                        { "matches", new FormatProperty { type = "boolean" } },
+                        { "category", new FormatProperty { type = new[] { "string", "null" } } },
+                        { "reason", new FormatProperty { type = new[] { "string", "null" } } }
+                    },
+                    required = ["matches", "category", "reason"]
+                }
+            };
+            var result = await _ollamaHttpClient.GenerateAsync(ollamaRequest);
+            Console.WriteLine(result);
         }
         
         Console.WriteLine($"[{message.Author.Username} in #{message.Channel.Name}]: {message.Content}");
