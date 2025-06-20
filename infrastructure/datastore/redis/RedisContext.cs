@@ -1,6 +1,8 @@
 using System.Text.Json;
+using JustFilter.data.converter;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using JustFilter.infrastructure.datastore.mongo.config;
 
 namespace JustFilter.infrastructure.datastore.redis;
 
@@ -8,18 +10,20 @@ public class RedisContext
 {
     private readonly IDatabase _db;
     private readonly ILogger<RedisContext> _logger;
-    private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
+    private readonly JsonSerializerOptions _jsonOptions;
 
     public RedisContext(IConnectionMultiplexer redis, ILogger<RedisContext> logger)
     {
         _db = redis.GetDatabase();
         _logger = logger;
+        _jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        _jsonOptions.Converters.Add(new ObjectIdConverter());
     }
 
     private string GetServerChannelsKey(ulong serverId) => $"server:{serverId}:channels";
     private string GetChannelConfigsKey(ulong serverId, ulong channelId) => $"server:{serverId}:channel:{channelId}:configs";
 
-    public async Task<List<string>> GetConfigsAsync(ulong serverId, ulong channelId)
+    public async Task<List<ConfigData>> GetConfigsAsync(ulong serverId, ulong channelId)
     {
         try
         {
@@ -28,12 +32,12 @@ public class RedisContext
             if (!redisValue.HasValue)
             {
                 _logger.LogInformation("No configs found for server {ServerId}, channel {ChannelId}", serverId, channelId);
-                return new List<string>();
+                return new List<ConfigData>();
             }
 
-            var configs = JsonSerializer.Deserialize<List<string>>(redisValue, _jsonOptions);
+            var configs = JsonSerializer.Deserialize<List<ConfigData>>(redisValue, _jsonOptions);
             _logger.LogInformation("Fetched {Count} configs for server {ServerId}, channel {ChannelId}", configs?.Count ?? 0, serverId, channelId);
-            return configs ?? new List<string>();
+            return configs ?? new List<ConfigData>();
         }
         catch (Exception ex)
         {
@@ -42,13 +46,14 @@ public class RedisContext
         }
     }
 
-    public async Task AddConfigsAsync(ulong serverId, ulong channelId, List<string> newConfigs)
+    public async Task AddConfigsAsync(ulong serverId, ulong channelId, List<ConfigData> newConfigs)
     {
         try
         {
             var existingConfigs = await GetConfigsAsync(serverId, channelId);
-            var addedConfigs = newConfigs.Where(c => !existingConfigs.Contains(c)).ToList();
+            var existingIds = existingConfigs.Select(c => c.Id).ToHashSet();
 
+            var addedConfigs = newConfigs.Where(c => !existingIds.Contains(c.Id)).ToList();
             if (addedConfigs.Count == 0)
             {
                 _logger.LogInformation("No new configs to add for server {ServerId}, channel {ChannelId}", serverId, channelId);
@@ -66,7 +71,7 @@ public class RedisContext
         }
     }
 
-    public async Task UpdateConfigsAsync(ulong serverId, ulong channelId, List<string> configs)
+    public async Task UpdateConfigsAsync(ulong serverId, ulong channelId, List<ConfigData> configs)
     {
         try
         {
@@ -119,7 +124,7 @@ public class RedisContext
             : new List<ulong>();
     }
 
-    private async Task SetConfigsAndEnsureChannelAsync(ulong serverId, ulong channelId, List<string> configs)
+    private async Task SetConfigsAndEnsureChannelAsync(ulong serverId, ulong channelId, List<ConfigData> configs)
     {
         var configKey = GetChannelConfigsKey(serverId, channelId);
         var configJson = JsonSerializer.Serialize(configs, _jsonOptions);

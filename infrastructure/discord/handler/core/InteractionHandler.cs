@@ -1,6 +1,8 @@
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
+using JustFilter.infrastructure.datastore.mongo.config;
+using JustFilter.infrastructure.datastore.redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -12,17 +14,23 @@ public class InteractionHandler
     private readonly InteractionService _interactions;
     private readonly CommandService _commands;
     private readonly IServiceProvider _services;
+    private readonly RedisContext _redisContext;
+    private readonly ConfigRepository _configRepository;
 
     public InteractionHandler(
         DiscordSocketClient client,
         InteractionService interactions,
         CommandService commands,
-        IServiceProvider services
+        IServiceProvider services,
+        RedisContext redisContext,
+        ConfigRepository configRepository
     ) {
         _client = client;
         _interactions = interactions;
         _commands = commands;
         _services = services;
+        _redisContext = redisContext;
+        _configRepository = configRepository;
 
         _client.Ready += OnReady;
         _client.InteractionCreated += HandleInteraction;
@@ -69,12 +77,12 @@ public class InteractionHandler
         if (serverId != null)
         {
             var messageText = message.Content;
+            var configs = _redisContext.GetConfigsAsync(serverId.Value, channelId).Result;
             // TODO redis cache confis
         }
         
         Console.WriteLine($"[{message.Author.Username} in #{message.Channel.Name}]: {message.Content}");
         Console.WriteLine($"serverId: {serverId},  channelId: {channelId}");
-        
     }
     
     /*
