@@ -44,7 +44,6 @@ public class ManageCommands : InteractionModuleBase<SocketInteractionContext>
         var channelId = Context.Channel.Id;
         
         await _channelRepository.DeleteConfigsInChannel(guildId, channelId);
-        //  TODO TEST IT
         await _redisContext.RemoveConfigsAsync(guildId, channelId);
         await RespondAsync("Configs have been stopped");
     }

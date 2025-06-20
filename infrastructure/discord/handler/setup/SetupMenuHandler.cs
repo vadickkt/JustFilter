@@ -1,22 +1,19 @@
 using Discord.Interactions;
-using JustFilter.infrastructure.ai;
-using JustFilter.infrastructure.ai.data;
-using JustFilter.infrastructure.ai.model;
 using JustFilter.infrastructure.datastore.mongo.channel;
-using JustFilter.infrastructure.datastore.mongo.config;
+using JustFilter.infrastructure.datastore.redis;
 using MongoDB.Bson;
-using OllamaSharp;
-using OllamaSharp.Models;
 
 namespace JustFilter.infrastructure.discord.handler.setup;
 
 public class SetupMenuHandler : InteractionModuleBase<SocketInteractionContext>
 {
     private readonly ChannelRepository _channelRepository;
+    private readonly RedisContext _redisContext;
 
-    public SetupMenuHandler(ConfigRepository configRepository, ChannelRepository channelRepository)
+    public SetupMenuHandler(ChannelRepository channelRepository, RedisContext redisContext)
     {
         _channelRepository = channelRepository;
+        _redisContext = redisContext;
     }
 
     [ComponentInteraction("setup_menu")]
@@ -44,15 +41,17 @@ public class SetupMenuHandler : InteractionModuleBase<SocketInteractionContext>
         };
 
         var result = await _channelRepository.AddChannelIfNotExistAsync(channelData);
-
+        
         if (result.Existed)
         {
             result.ChannelData.ConfigsIds = configIds;
             await _channelRepository.UpdateChannel(result.ChannelData);
+            await _redisContext.UpdateConfigsAsync(guild.Id, channel.Id, selectedConfigs.ToList());
             await RespondAsync("Channel configurations have been updated.");
         }
         else
         {
+            await _redisContext.AddConfigsAsync(guild.Id, channel.Id, selectedConfigs.ToList());
             await RespondAsync("Channel configurations have been added.");
         }
     }

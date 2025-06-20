@@ -1,5 +1,5 @@
 using System.Text.Json;
-using MongoDB.Bson;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
 namespace JustFilter.infrastructure.datastore.redis;
@@ -7,17 +7,110 @@ namespace JustFilter.infrastructure.datastore.redis;
 public class RedisContext
 {
     private readonly IDatabase _db;
+    private readonly ILogger<RedisContext> _logger;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 
-    public RedisContext(IConnectionMultiplexer redis)
+    public RedisContext(IConnectionMultiplexer redis, ILogger<RedisContext> logger)
     {
         _db = redis.GetDatabase();
+        _logger = logger;
     }
 
     private string GetServerChannelsKey(ulong serverId) => $"server:{serverId}:channels";
     private string GetChannelConfigsKey(ulong serverId, ulong channelId) => $"server:{serverId}:channel:{channelId}:configs";
 
-    public async Task<List<ulong>> GetChannelsAsync(ulong serverId)
+    public async Task<List<string>> GetConfigsAsync(ulong serverId, ulong channelId)
+    {
+        try
+        {
+            var key = GetChannelConfigsKey(serverId, channelId);
+            var redisValue = await _db.StringGetAsync(key);
+            if (!redisValue.HasValue)
+            {
+                _logger.LogInformation("No configs found for server {ServerId}, channel {ChannelId}", serverId, channelId);
+                return new List<string>();
+            }
+
+            var configs = JsonSerializer.Deserialize<List<string>>(redisValue, _jsonOptions);
+            _logger.LogInformation("Fetched {Count} configs for server {ServerId}, channel {ChannelId}", configs?.Count ?? 0, serverId, channelId);
+            return configs ?? new List<string>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting configs for server {ServerId}, channel {ChannelId}", serverId, channelId);
+            throw;
+        }
+    }
+
+    public async Task AddConfigsAsync(ulong serverId, ulong channelId, List<string> newConfigs)
+    {
+        try
+        {
+            var existingConfigs = await GetConfigsAsync(serverId, channelId);
+            var addedConfigs = newConfigs.Where(c => !existingConfigs.Contains(c)).ToList();
+
+            if (addedConfigs.Count == 0)
+            {
+                _logger.LogInformation("No new configs to add for server {ServerId}, channel {ChannelId}", serverId, channelId);
+                return;
+            }
+
+            existingConfigs.AddRange(addedConfigs);
+            await SetConfigsAndEnsureChannelAsync(serverId, channelId, existingConfigs);
+            _logger.LogInformation("Added {Count} new configs to server {ServerId}, channel {ChannelId}", addedConfigs.Count, serverId, channelId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding configs for server {ServerId}, channel {ChannelId}", serverId, channelId);
+            throw;
+        }
+    }
+
+    public async Task UpdateConfigsAsync(ulong serverId, ulong channelId, List<string> configs)
+    {
+        try
+        {
+            await SetConfigsAndEnsureChannelAsync(serverId, channelId, configs);
+            _logger.LogInformation("Updated configs for server {ServerId}, channel {ChannelId} with {Count} configs", serverId, channelId, configs.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating configs for server {ServerId}, channel {ChannelId}", serverId, channelId);
+            throw;
+        }
+    }
+
+    public async Task RemoveConfigsAsync(ulong serverId, ulong channelId)
+    {
+        try
+        {
+            var configKey = GetChannelConfigsKey(serverId, channelId);
+            await _db.KeyDeleteAsync(configKey);
+
+            var serverKey = GetServerChannelsKey(serverId);
+            var channels = await GetChannelsAsync(serverId);
+            channels.Remove(channelId);
+
+            if (channels.Count == 0)
+            {
+                await _db.KeyDeleteAsync(serverKey);
+                _logger.LogInformation("Removed channel {ChannelId} and server {ServerId} because no more channels remain", channelId, serverId);
+            }
+            else
+            {
+                var channelsJson = JsonSerializer.Serialize(channels, _jsonOptions);
+                await _db.StringSetAsync(serverKey, channelsJson);
+                _logger.LogInformation("Removed channel {ChannelId} from server {ServerId}", channelId, serverId);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error removing configs for server {ServerId}, channel {ChannelId}", serverId, channelId);
+            throw;
+        }
+    }
+
+    private async Task<List<ulong>> GetChannelsAsync(ulong serverId)
     {
         var key = GetServerChannelsKey(serverId);
         var redisValue = await _db.StringGetAsync(key);
@@ -26,51 +119,20 @@ public class RedisContext
             : new List<ulong>();
     }
 
-    public async Task SetChannelsAsync(ulong serverId, List<ulong> channels)
+    private async Task SetConfigsAndEnsureChannelAsync(ulong serverId, ulong channelId, List<string> configs)
     {
-        var key = GetServerChannelsKey(serverId);
-        var json = JsonSerializer.Serialize(channels, _jsonOptions);
-        await _db.StringSetAsync(key, json);
-    }
+        var configKey = GetChannelConfigsKey(serverId, channelId);
+        var configJson = JsonSerializer.Serialize(configs, _jsonOptions);
+        await _db.StringSetAsync(configKey, configJson);
 
-    public async Task<List<ObjectId>> GetConfigsAsync(ulong serverId, ulong channelId)
-    {
-        var key = GetChannelConfigsKey(serverId, channelId);
-        var redisValue = await _db.StringGetAsync(key);
-        return redisValue.HasValue
-            ? JsonSerializer.Deserialize<List<ObjectId>>(redisValue, _jsonOptions)
-            : [];
-    }
+        var serverKey = GetServerChannelsKey(serverId);
+        var channels = await GetChannelsAsync(serverId);
 
-    public async Task SetConfigsAsync(ulong serverId, ulong channelId, List<ObjectId> configs)
-    {
-        var key = GetChannelConfigsKey(serverId, channelId);
-        var json = JsonSerializer.Serialize(configs, _jsonOptions);
-        await _db.StringSetAsync(key, json);
-    }
-
-    public async Task RemoveConfigsAsync(ulong serverId, ulong channelId)
-    {
-        var key = GetChannelConfigsKey(serverId, channelId);
-        await _db.KeyDeleteAsync(key);
+        if (!channels.Contains(channelId))
+        {
+            channels.Add(channelId);
+            var channelsJson = JsonSerializer.Serialize(channels, _jsonOptions);
+            await _db.StringSetAsync(serverKey, channelsJson);
+        }
     }
 }
-
-/*
-var redis = ConnectionMultiplexer.Connect("localhost");
-   var context = new RedisContext(redis);
-   
-   // Добавление каналов к серверу
-   await context.SetChannelsAsync("123", new List<string> { "general", "news" });
-   
-   // Добавление конфигов к каналу
-   await context.SetConfigsAsync("123", "general", new List<Config>
-   {
-       new Config { Name = "FilterBadWords", Enabled = true },
-       new Config { Name = "AutoDelete", Enabled = false }
-   });
-   
-   // Получение
-   var channels = await context.GetChannelsAsync("123");
-   var configs = await context.GetConfigsAsync("123", "general");
-   */
