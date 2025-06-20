@@ -1,6 +1,7 @@
 using Discord.Interactions;
 using JustFilter.infrastructure.datastore.mongo.channel;
 using JustFilter.infrastructure.datastore.mongo.config;
+using JustFilter.infrastructure.datastore.redis;
 using JustFilter.presentation.printers.setup;
 
 namespace JustFilter.presentation.commands.core.configuration;
@@ -9,11 +10,13 @@ public class ManageCommands : InteractionModuleBase<SocketInteractionContext>
 {
     private readonly ConfigRepository _configRepository;
     private readonly ChannelRepository _channelRepository;
+    private readonly RedisContext _redisContext;
 
-    public ManageCommands(ConfigRepository configRepository, ChannelRepository channelRepository)
+    public ManageCommands(ConfigRepository configRepository, ChannelRepository channelRepository, RedisContext redisContext)
     {
         _configRepository = configRepository;
         _channelRepository = channelRepository;
+        _redisContext = redisContext;
     }
     
     [SlashCommand("setup", "Setup JustFilter in a channel")]
@@ -41,6 +44,8 @@ public class ManageCommands : InteractionModuleBase<SocketInteractionContext>
         var channelId = Context.Channel.Id;
         
         await _channelRepository.DeleteConfigsInChannel(guildId, channelId);
+        //  TODO TEST IT
+        await _redisContext.RemoveConfigsAsync(guildId, channelId);
         await RespondAsync("Configs have been stopped");
     }
 }

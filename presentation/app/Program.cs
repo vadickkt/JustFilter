@@ -2,11 +2,11 @@
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
-using JustFilter.infrastructure.database.mongo;
 using JustFilter.infrastructure.database.mongo.server;
 using JustFilter.infrastructure.datastore.mongo;
 using JustFilter.infrastructure.datastore.mongo.channel;
 using JustFilter.infrastructure.datastore.mongo.config;
+using JustFilter.infrastructure.datastore.redis;
 using JustFilter.infrastructure.discord.handler.core;
 using JustFilter.infrastructure.discord.service;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +55,7 @@ IHost host = Host.CreateDefaultBuilder(args)
             var redisConfiguration = ConfigurationOptions.Parse(redisBaseUrl, true);
             return ConnectionMultiplexer.Connect(redisConfiguration);
         });
+        services.AddSingleton<RedisContext>();
     }).Build();
 
 await host.RunAsync();

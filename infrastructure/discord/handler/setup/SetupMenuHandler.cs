@@ -12,12 +12,10 @@ namespace JustFilter.infrastructure.discord.handler.setup;
 
 public class SetupMenuHandler : InteractionModuleBase<SocketInteractionContext>
 {
-    private readonly ConfigRepository _configRepository;
     private readonly ChannelRepository _channelRepository;
 
     public SetupMenuHandler(ConfigRepository configRepository, ChannelRepository channelRepository)
     {
-        _configRepository = configRepository;
         _channelRepository = channelRepository;
     }
 
