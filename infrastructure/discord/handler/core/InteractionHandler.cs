@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -79,11 +80,11 @@ public class InteractionHandler
             var messageText = message.Content;
             var configs = _redisContext.GetConfigsAsync(serverId.Value, channelId).Result;
             var prompt = OllamaConst.Prompt(messageText, configs);
-            
+
             var ollamaRequest = new OllamaGenerateRequest
             {
                 model = "deepseek-r1:latest",
-                prompt = OllamaConst.Prompt("Украина лучше России", configs),
+                prompt = prompt,
                 stream = false,
                 format = new FormatRequest
                 {
@@ -98,27 +99,18 @@ public class InteractionHandler
                 }
             };
             var result = await _ollamaHttpClient.GenerateAsync(ollamaRequest);
-            Console.WriteLine(result);
-        }
-        
-        Console.WriteLine($"[{message.Author.Username} in #{message.Channel.Name}]: {message.Content}");
-        Console.WriteLine($"serverId: {serverId},  channelId: {channelId}");
-    }
-    
-    /*
 
-var httpClient = new HttpClient();
-     const string baseUrl = "http://localhost:11434/api/";
-     var ollamaHttpClient = new OllamaHttpClient(httpClient, baseUrl);
-     var ollamaRequest = new OllamaGenerateRequest{
-         model = "deepseek-r1:latest",
-         prompt = OllamaConst.Prompt("Украина лучше России", configs),
-         stream = false,
-         format = new FormatRequest{
-             type = "object",
-             properties = new Dictionary<string, FormatProperty>{{ "isPolicy", new FormatProperty { type = "boolean" } },{ "explanation", new FormatProperty { type = "string" } }},
-             required = ["isPolicy", "explanation"]}};
-     var result = await ollamaHttpClient.GenerateAsync(ollamaRequest);
-     Console.WriteLine(result);
-     await RespondAsync(result);*/
+            if (result == null)
+            {
+                await message.Channel.SendMessageAsync("Something went wrong");
+                return;
+            }
+
+            if (result.Matches)
+            {
+                //TODO send a review why the message deleted was
+                await message.DeleteAsync();
+            }
+        }
+    }
 }
