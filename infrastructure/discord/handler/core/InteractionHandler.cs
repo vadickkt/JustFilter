@@ -5,6 +5,7 @@ using Discord.WebSocket;
 using JustFilter.infrastructure.ai;
 using JustFilter.infrastructure.ai.data;
 using JustFilter.infrastructure.ai.model;
+using JustFilter.infrastructure.datastore.mongo.deleted_messages;
 using JustFilter.infrastructure.datastore.redis;
 
 namespace JustFilter.infrastructure.discord.handler.core;
@@ -17,6 +18,7 @@ public class InteractionHandler
     private readonly IServiceProvider _services;
     private readonly RedisContext _redisContext;
     private readonly OllamaHttpClient _ollamaHttpClient;
+    private readonly DeletedMessageRepository _deletedMessageRepository;
 
     public InteractionHandler(
         DiscordSocketClient client,
@@ -24,7 +26,8 @@ public class InteractionHandler
         CommandService commands,
         IServiceProvider services,
         RedisContext redisContext,
-        OllamaHttpClient ollamaHttpClient
+        OllamaHttpClient ollamaHttpClient,
+        DeletedMessageRepository deletedMessageRepository
     ) {
         _client = client;
         _interactions = interactions;
@@ -32,6 +35,7 @@ public class InteractionHandler
         _services = services;
         _redisContext = redisContext;
         _ollamaHttpClient = ollamaHttpClient;
+        _deletedMessageRepository = deletedMessageRepository;
 
         _client.Ready += OnReady;
         _client.InteractionCreated += HandleInteraction;
@@ -108,8 +112,13 @@ public class InteractionHandler
 
             if (result.Matches)
             {
-                //TODO send a review why the message deleted was
+                var deletedMessage = new DeletedMessageData
+                {
+                    DeletedMessage = messageText,
+                    DeletingReason = result.Reason
+                };
                 await message.DeleteAsync();
+                await _deletedMessageRepository.AddDeletedMessage(deletedMessage);
             }
         }
     }

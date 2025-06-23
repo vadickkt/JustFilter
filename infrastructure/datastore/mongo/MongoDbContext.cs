@@ -1,6 +1,7 @@
 using JustFilter.infrastructure.database.mongo.server;
 using JustFilter.infrastructure.datastore.mongo.channel;
 using JustFilter.infrastructure.datastore.mongo.config;
+using JustFilter.infrastructure.datastore.mongo.deleted_messages;
 using MongoDB.Driver;
 
 namespace JustFilter.infrastructure.datastore.mongo;
@@ -12,4 +13,5 @@ public class MongoDbContext(IMongoClient mongoClient)
     public IMongoCollection<ServerData> Servers => _database.GetCollection<ServerData>("discord-servers");
     public IMongoCollection<ConfigData> Configs => _database.GetCollection<ConfigData>("configs");
     public IMongoCollection<ChannelData> Channels => _database.GetCollection<ChannelData>("channels");
+    public IMongoCollection<DeletedMessageData> DeletedMessages => _database.GetCollection<DeletedMessageData>("deleted_messages");
 }
