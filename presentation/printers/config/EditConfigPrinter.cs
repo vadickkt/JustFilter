@@ -2,10 +2,20 @@ using Discord;
 using JustFilter.data.utils;
 using JustFilter.infrastructure.datastore.mongo.config;
 
-namespace JustFilter.presentation.printers;
+namespace JustFilter.presentation.printers.config;
 
 public static class EditConfigPrinter 
 {
+    public static Embed CreateFirstConfig()
+    {
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle("Failure")
+            .WithColor(Color.Red)
+            .WithDescription("First, you need to create a config");
+
+        return embedBuilder.Build();
+    }
+    
     public static Embed PrintStartUpdateMessage()
     {
         var embedBuilder = new EmbedBuilder()

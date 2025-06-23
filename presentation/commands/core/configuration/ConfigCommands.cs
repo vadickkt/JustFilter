@@ -2,6 +2,7 @@ using Discord;
 using Discord.Interactions;
 using JustFilter.infrastructure.datastore.mongo.config;
 using JustFilter.presentation.printers;
+using JustFilter.presentation.printers.config;
 
 namespace JustFilter.presentation.commands.core.configuraiton;
 
@@ -31,12 +32,16 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
     public async Task DeleteConfigAsync()
     {
         var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
-        if (configs != null)
+        if (configs != null && configs.Count != 0)
         {
             await RespondAsync(
                 embed: DeleteConfigPrinter.PrintDeleteMessage(), 
                 components: DeleteConfigPrinter.BuildConfigDeleteComponents(configs)
             );
+        }
+        else
+        {
+            await RespondAsync(embed: DeleteConfigPrinter.CreateFirstConfig());
         }
     }
 
@@ -45,7 +50,7 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
     {
         var guild = Context.Guild;
         var result = await _configRepository.GetAllConfigs(guild.Id);
-        if (result == null) await RespondAsync("No configs found");
+        if (result == null || result.Count == 0) await RespondAsync("No configs found, create a new one");
         else await RespondAsync(embed: GetAllConfigsPrinter.PrintConfigs(result));
     }
 
@@ -53,12 +58,15 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
     public async Task UpdateConfigAsync()
     {
         var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
-        if (configs != null)
+        if (configs != null && configs.Count != 0)
         {
             await RespondAsync(
                 embed: EditConfigPrinter.PrintStartUpdateMessage(), 
                 components: EditConfigPrinter.BuildStartConfigEditComponents(configs)
             );
+        } else
+        {
+            await RespondAsync(embed: EditConfigPrinter.CreateFirstConfig());
         }
     }
 }
