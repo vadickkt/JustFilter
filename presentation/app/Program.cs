@@ -7,6 +7,7 @@ using JustFilter.infrastructure.database.mongo.server;
 using JustFilter.infrastructure.datastore.mongo;
 using JustFilter.infrastructure.datastore.mongo.channel;
 using JustFilter.infrastructure.datastore.mongo.config;
+using JustFilter.infrastructure.datastore.mongo.deleted_messages;
 using JustFilter.infrastructure.datastore.redis;
 using JustFilter.infrastructure.discord.handler.core;
 using JustFilter.infrastructure.discord.service;
@@ -50,7 +51,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<ConfigRepository>();
         services.AddSingleton<ChannelRepository>();
 
-        services.AddSingleton<IConnectionMultiplexer>(sp =>
+        services.AddSingleton<IConnectionMultiplexer>(_ =>
         {
             var redisBaseUrl = configuration["Redis:ConnectionString"] ?? "localhost:6379,abortConnect=false"; 
             var redisConfiguration = ConfigurationOptions.Parse(redisBaseUrl, true);
@@ -59,6 +60,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<RedisContext>();
         services.AddSingleton<HttpClient>();
         services.AddSingleton<OllamaHttpClient>();
+        services.AddSingleton<DeletedMessageRepository>();
     }).Build();
 
 await host.RunAsync();
