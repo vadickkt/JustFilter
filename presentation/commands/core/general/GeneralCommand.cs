@@ -1,4 +1,5 @@
 using Discord.Interactions;
+using JustFilter.presentation.printers.general;
 
 namespace JustFilter.presentation.commands.core.general;
 
@@ -13,6 +14,6 @@ public class GeneralCommand : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("help", "Show help menu")]
     public async Task HelpAsync()
     {
-        await RespondAsync("Need help? Use `/ping` or `/config-add`.");
+        await RespondAsync(embed: HelpPrinter.BuildHelpMessage());
     }
 }
