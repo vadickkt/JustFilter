@@ -48,40 +48,26 @@ public static class SetupPrinter
 
     public static MessageComponent BuildSetupComponents(List<ConfigData> configs)
     {
-        Console.WriteLine($"[BuildSetupComponents] Start - Config count: {configs?.Count ?? 0}");
-
-        if (configs == null || configs.Count == 0)
-        {
-            Console.WriteLine("[BuildSetupComponents] WARNING: Empty or null config list!");
-            throw new ArgumentException("Cannot build setup components with empty config list.");
-        }
-
         var menuBuilder = new SelectMenuBuilder()
             .WithPlaceholder("Select a config")
             .WithCustomId("setup_menu")
-            .WithMinValues(1) // changed from 0 to 1 to avoid invalid config state
+            .WithMinValues(1)
             .WithMaxValues(configs.Count);
 
         for (var i = 0; i < configs.Count; i++)
         {
             var config = configs[i];
-            Console.WriteLine($"[BuildSetupComponents] Adding config option: Name={config.Name}, Id={config.Id}");
             menuBuilder.AddOption($"#{i + 1} {config.Name}", config.Id.ToString());
         }
 
-        var builder = new ComponentBuilder()
-            .WithSelectMenu(menuBuilder);
-
+        var builder = new ComponentBuilder().WithSelectMenu(menuBuilder);
         var buttons = BuildButtons();
-        Console.WriteLine($"[BuildSetupComponents] Adding {buttons.Count} buttons.");
 
         foreach (var button in buttons)
         {
-            Console.WriteLine($"[BuildSetupComponents] Button: Label={button.Label}, CustomId={button.CustomId}");
             builder.WithButton(button);
         }
 
-        Console.WriteLine("[BuildSetupComponents] Finished building components.");
         return builder.Build();
     }
 
