@@ -18,8 +18,6 @@ public class OllamaHttpClient
 
         var baseUrl = config["Ollama:BaseUrl"] ?? "http://localhost:11434/api/";
         _httpClient.BaseAddress = new Uri(baseUrl);
-
-        _logger.LogInformation("OllamaHttpClient initialized with BaseAddress: {BaseAddress}", _httpClient.BaseAddress);
     }
 
     public async Task<OllamaResponseMetaData?> GenerateAsync(OllamaGenerateRequest request)
