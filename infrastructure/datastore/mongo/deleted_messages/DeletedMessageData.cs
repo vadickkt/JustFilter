@@ -9,4 +9,6 @@ public class DeletedMessageData
     public ObjectId Id { get; set; }
     public required string DeletedMessage { get; set; }
     public required string DeletingReason { get; set; }
+    public required ulong AuthorId { get; set; }
+    public required string AuthorName { get; set; }
 }

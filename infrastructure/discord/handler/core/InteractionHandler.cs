@@ -7,6 +7,9 @@ using JustFilter.infrastructure.ai.data;
 using JustFilter.infrastructure.ai.model;
 using JustFilter.infrastructure.datastore.mongo.deleted_messages;
 using JustFilter.infrastructure.datastore.redis;
+using JustFilter.presentation.printers.common;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 
 namespace JustFilter.infrastructure.discord.handler.core;
 
@@ -19,6 +22,7 @@ public class InteractionHandler
     private readonly RedisContext _redisContext;
     private readonly OllamaHttpClient _ollamaHttpClient;
     private readonly DeletedMessageRepository _deletedMessageRepository;
+    private readonly IConfiguration _configuration;
 
     public InteractionHandler(
         DiscordSocketClient client,
@@ -27,7 +31,8 @@ public class InteractionHandler
         IServiceProvider services,
         RedisContext redisContext,
         OllamaHttpClient ollamaHttpClient,
-        DeletedMessageRepository deletedMessageRepository
+        DeletedMessageRepository deletedMessageRepository,
+        IConfiguration configuration
     ) {
         _client = client;
         _interactions = interactions;
@@ -36,7 +41,8 @@ public class InteractionHandler
         _redisContext = redisContext;
         _ollamaHttpClient = ollamaHttpClient;
         _deletedMessageRepository = deletedMessageRepository;
-
+        _configuration = configuration;
+        
         _client.Ready += OnReady;
         _client.InteractionCreated += HandleInteraction;
         _client.MessageReceived += HandleMessageAsync;
@@ -78,6 +84,8 @@ public class InteractionHandler
     {
         var serverId = (message.Channel as SocketGuildChannel)?.Guild.Id;
         var channelId = message.Channel.Id;
+        var userId = message.Author.Id;
+        var userName = (message.Author as SocketGuildUser)?.GlobalName;
 
         if (serverId != null)
         {
@@ -112,13 +120,25 @@ public class InteractionHandler
 
             if (result.Matches)
             {
+                var deletedMessageId = ObjectId.GenerateNewId(DateTime.Now);
                 var deletedMessage = new DeletedMessageData
                 {
+                    Id = deletedMessageId,
                     DeletedMessage = messageText,
-                    DeletingReason = result.Reason
+                    DeletingReason = result.Reason,
+                    AuthorId = userId,
+                    AuthorName = userName ?? "Unknown",
                 };
                 await message.DeleteAsync();
                 await _deletedMessageRepository.AddDeletedMessage(deletedMessage);
+
+                var baseUrl = _configuration["JustFilterPanel:BaseUrl"] ?? 
+                              throw new InvalidOperationException("JustFilterPanel:BaseUrl is null");
+                
+                await message.Channel.SendMessageAsync(
+                    embed: InteractionHandlerPrinter.CreateMessageAboutDeletedMessage(),
+                    components: InteractionHandlerPrinter.BuildDeletedMessageInfoButton(deletedMessageId, baseUrl)
+                );
             }
         }
     }
