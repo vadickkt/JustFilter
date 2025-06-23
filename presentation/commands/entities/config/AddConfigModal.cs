@@ -3,7 +3,7 @@ using Discord.Interactions;
 
 namespace JustFilter.presentation.commands.entities.config;
 
-public abstract class AddConfigModal : IModal
+public class AddConfigModal : IModal
 {
     public string Title => "Add Config";
 

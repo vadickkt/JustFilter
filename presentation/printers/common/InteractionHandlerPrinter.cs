@@ -16,7 +16,7 @@ public static class InteractionHandlerPrinter
 
     public static MessageComponent BuildDeletedMessageInfoButton(ObjectId deletedMessageId, string baseUrl)
     {
-        var url = $"${baseUrl}/{deletedMessageId}";
+        var url = $"{baseUrl}/{deletedMessageId}";
 
         var infoButton = new ButtonBuilder()
             .WithLabel("View Information")

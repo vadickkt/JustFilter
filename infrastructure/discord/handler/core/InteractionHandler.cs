@@ -133,11 +133,18 @@ public class InteractionHandler
 
                 var baseUrl = _configuration["JustFilterPanel:BaseUrl"] ?? 
                               throw new InvalidOperationException("JustFilterPanel:BaseUrl is null");
-                
-                await message.Channel.SendMessageAsync(
-                    embed: InteractionHandlerPrinter.CreateMessageAboutDeletedMessage(),
-                    components: InteractionHandlerPrinter.BuildDeletedMessageInfoButton(deletedMessageId, baseUrl)
-                );
+                // TODO delete try/catch and test it
+                try
+                {
+                    await message.Channel.SendMessageAsync(
+                        embed: InteractionHandlerPrinter.CreateMessageAboutDeletedMessage(),
+                        components: InteractionHandlerPrinter.BuildDeletedMessageInfoButton(deletedMessageId, baseUrl)
+                    );
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
     }
