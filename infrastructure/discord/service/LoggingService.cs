@@ -12,7 +12,7 @@ public class LoggingService
         command.Log += LogAsync;
     }
 
-    private Task LogAsync(LogMessage msg)
+    private static Task LogAsync(LogMessage msg)
     {
         Console.WriteLine($"[{msg.Severity}] {msg.Source}: {msg.Message}");
         if (msg.Exception != null)

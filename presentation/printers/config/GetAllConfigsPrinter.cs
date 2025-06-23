@@ -1,9 +1,9 @@
 using Discord;
 using JustFilter.infrastructure.datastore.mongo.config;
 
-namespace JustFilter.presentation.printers;
+namespace JustFilter.presentation.printers.config;
 
-public class GetAllConfigsPrinter
+public static class GetAllConfigsPrinter
 {
     public static Embed PrintConfigs(List<ConfigData> configs)
     {

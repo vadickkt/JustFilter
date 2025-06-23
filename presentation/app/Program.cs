@@ -8,6 +8,7 @@ using JustFilter.infrastructure.datastore.mongo;
 using JustFilter.infrastructure.datastore.mongo.channel;
 using JustFilter.infrastructure.datastore.mongo.config;
 using JustFilter.infrastructure.datastore.mongo.deleted_messages;
+using JustFilter.infrastructure.datastore.mongo.server;
 using JustFilter.infrastructure.datastore.redis;
 using JustFilter.infrastructure.discord.handler.core;
 using JustFilter.infrastructure.discord.service;
@@ -17,7 +18,7 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using StackExchange.Redis;
 
-IHost host = Host.CreateDefaultBuilder(args)
+var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((_, config) =>
     {
         config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);

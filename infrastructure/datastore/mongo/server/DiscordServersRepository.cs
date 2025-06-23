@@ -1,7 +1,7 @@
-using JustFilter.infrastructure.datastore.mongo;
+using JustFilter.infrastructure.database.mongo.server;
 using MongoDB.Driver;
 
-namespace JustFilter.infrastructure.database.mongo.server;
+namespace JustFilter.infrastructure.datastore.mongo.server;
 
 public class DiscordServersRepository
 {

@@ -6,24 +6,12 @@ public static class OllamaConst
 {
     public static string Prompt(string message, List<ConfigData> configs)
     {
-        // Формуємо опис категорій, додаючи приклади в полі "policy"
         var categoriesText = string.Join("\n", configs.Select(c =>
         {
-            string description = c.Description;
-
-            // Якщо категорія - "policy", додаємо приклади в опис
-            if (c.Name.ToLower() == "policy")
-            {
-                description += "\n  Examples:\n" +
-                               "  - \"Biden is incompetent\"\n" +
-                               "  - \"Putin is a dictator\"\n" +
-                               "  - \"зеленський лох\"";
-            }
-
+            var description = c.Description;
             return $"- Category: {c.Name}\n  Description: {description}";
         }));
 
-        // Формуємо повний prompt з динамічними категоріями та повідомленням
         return
             "You are an AI content filter. Your task is to check if a message violates the following policies:\n\n" +
             $"{categoriesText}\n\n" +

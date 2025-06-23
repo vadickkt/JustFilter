@@ -12,15 +12,15 @@ public class RedisContext
     private readonly IDatabase _db;
     private readonly JsonSerializerOptions _jsonOptions;
 
-    public RedisContext(IConnectionMultiplexer redis, ILogger<RedisContext> logger)
+    public RedisContext(IConnectionMultiplexer redis)
     {
         _db = redis.GetDatabase();
         _jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
         _jsonOptions.Converters.Add(new ObjectIdConverter());
     }
 
-    private string GetServerChannelsKey(ulong serverId) => $"server:{serverId}:channels";
-    private string GetChannelConfigsKey(ulong serverId, ulong channelId) => $"server:{serverId}:channel:{channelId}:configs";
+    private static string GetServerChannelsKey(ulong serverId) => $"server:{serverId}:channels";
+    private static string GetChannelConfigsKey(ulong serverId, ulong channelId) => $"server:{serverId}:channel:{channelId}:configs";
     
     public async Task RemoveConfigAsync(ulong serverId, ulong channelId, ObjectId configId)
     {
@@ -54,7 +54,7 @@ public class RedisContext
         }
 
         var configs = JsonSerializer.Deserialize<List<ConfigData>>(redisValue, _jsonOptions);
-        return configs ?? new List<ConfigData>();
+        return configs ?? [];
     }
 
     public async Task AddConfigsAsync(ulong serverId, ulong channelId, List<ConfigData> newConfigs)
@@ -103,7 +103,7 @@ public class RedisContext
         var redisValue = await _db.StringGetAsync(key);
         return redisValue.HasValue
             ? JsonSerializer.Deserialize<List<ulong>>(redisValue, _jsonOptions)
-            : new List<ulong>();
+            : [];
     }
 
     private async Task SetConfigsAndEnsureChannelAsync(ulong serverId, ulong channelId, List<ConfigData> configs)

@@ -1,10 +1,9 @@
 using Discord;
 using Discord.Interactions;
 using JustFilter.infrastructure.datastore.mongo.config;
-using JustFilter.presentation.printers;
 using JustFilter.presentation.printers.config;
 
-namespace JustFilter.presentation.commands.core.configuraiton;
+namespace JustFilter.presentation.commands.core.configuration;
 
 public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
 {

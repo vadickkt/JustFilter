@@ -2,7 +2,7 @@ using Discord.Interactions;
 
 namespace JustFilter.presentation.commands.entities.config;
 
-public class EditConfigDescriptionModal : IModal
+public abstract class EditConfigDescriptionModal : IModal
 {
     public string Title => "Update Config";
     

@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace JustFilter.presentation.printers.common;
 
-public class InteractionHandlerPrinter
+public static class InteractionHandlerPrinter
 {
     public static Embed CreateMessageAboutDeletedMessage()
     {
