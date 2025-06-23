@@ -24,22 +24,31 @@ public class ManageCommands : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("setup", "Setup JustFilter in a channel")]
     public async Task SetupAsync()
     {
-        var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
-        if (configs != null)
+        try
         {
-            await RespondAsync(
-                embed: SetupPrinter.BuildListOfAvailableConfigs(configs),
-                components: SetupPrinter.BuildSetupComponents(configs)
-            );
+            var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
+            if (configs != null && configs.Count != 0)
+            {
+                await RespondAsync(
+                    embed: SetupPrinter.BuildListOfAvailableConfigs(configs),
+                    components: SetupPrinter.BuildSetupComponents(configs)
+                );
+            }
+            else
+            {
+                await RespondAsync(
+                    embed: SetupPrinter.BuildHelpMessage(),
+                    components: SetupPrinter.BuildHelpButtons()
+                );
+            }
         }
-        else
+        catch (Exception ex)
         {
-            await RespondAsync(
-                embed: SetupPrinter.BuildHelpMessage(),
-                components: SetupPrinter.BuildHelpButtons()
-            );
+            Console.WriteLine($"Error in /setup: {ex}");
+            await RespondAsync("Ein Fehler ist aufgetreten.");
         }
     }
+
 
     [SlashCommand("terminate", "Terminal Just Filter in a channel")]
     public async Task TerminateAsync()
