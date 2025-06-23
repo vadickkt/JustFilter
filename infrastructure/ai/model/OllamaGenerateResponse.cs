@@ -1,8 +1,6 @@
-namespace JustFilter.infrastructure.ai.model;
-
-using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
+namespace JustFilter.infrastructure.ai.model;
 
 public class OllamaGenerateResponse
 {

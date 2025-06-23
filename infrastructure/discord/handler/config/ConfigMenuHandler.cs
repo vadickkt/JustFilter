@@ -2,7 +2,6 @@ using Discord.Interactions;
 using JustFilter.infrastructure.datastore.mongo.channel;
 using JustFilter.infrastructure.datastore.mongo.config;
 using JustFilter.infrastructure.datastore.redis;
-using JustFilter.presentation.printers;
 using JustFilter.presentation.printers.config;
 using MongoDB.Bson;
 

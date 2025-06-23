@@ -1,8 +1,8 @@
-namespace JustFilter.data.converter;
-
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
+
+namespace JustFilter.data.converter;
 
 public class ObjectIdConverter : JsonConverter<ObjectId>
 {

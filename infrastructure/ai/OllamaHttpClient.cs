@@ -1,8 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using JustFilter.infrastructure.ai.model;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace JustFilter.infrastructure.ai;
 

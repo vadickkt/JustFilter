@@ -1,4 +1,3 @@
-using Discord;
 using Discord.Interactions;
 using JustFilter.infrastructure.datastore.mongo.channel;
 using JustFilter.infrastructure.datastore.mongo.config;

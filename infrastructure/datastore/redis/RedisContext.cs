@@ -1,9 +1,9 @@
 using System.Text.Json;
 using JustFilter.data.converter;
-using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 using JustFilter.infrastructure.datastore.mongo.config;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
+using StackExchange.Redis;
 
 namespace JustFilter.infrastructure.datastore.redis;
 

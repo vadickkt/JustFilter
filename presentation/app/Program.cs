@@ -11,7 +11,6 @@ using JustFilter.infrastructure.datastore.mongo.deleted_messages;
 using JustFilter.infrastructure.datastore.redis;
 using JustFilter.infrastructure.discord.handler.core;
 using JustFilter.infrastructure.discord.service;
-using JustFilter.presentation.printers.common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
