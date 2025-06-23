@@ -3,6 +3,7 @@ using JustFilter.data.converter;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using JustFilter.infrastructure.datastore.mongo.config;
+using MongoDB.Bson;
 
 namespace JustFilter.infrastructure.datastore.redis;
 
@@ -20,6 +21,28 @@ public class RedisContext
 
     private string GetServerChannelsKey(ulong serverId) => $"server:{serverId}:channels";
     private string GetChannelConfigsKey(ulong serverId, ulong channelId) => $"server:{serverId}:channel:{channelId}:configs";
+    
+    public async Task RemoveConfigAsync(ulong serverId, ulong channelId, ObjectId configId)
+    {
+        var configs = await GetConfigsAsync(serverId, channelId);
+        var updatedConfigs = configs.Where(c => c.Id != configId).ToList();
+
+        if (updatedConfigs.Count == configs.Count) return;
+
+        await SetConfigsAndEnsureChannelAsync(serverId, channelId, updatedConfigs);
+    }
+
+    public async Task UpdateConfigAsync(ulong serverId, ulong channelId, ConfigData updatedConfig)
+    {
+        var configs = await GetConfigsAsync(serverId, channelId);
+        var index = configs.FindIndex(c => c.Id == updatedConfig.Id);
+
+        if (index == -1) return;
+
+        configs[index] = updatedConfig;
+        await SetConfigsAndEnsureChannelAsync(serverId, channelId, configs);
+    }
+
 
     public async Task<List<ConfigData>> GetConfigsAsync(ulong serverId, ulong channelId)
     {
