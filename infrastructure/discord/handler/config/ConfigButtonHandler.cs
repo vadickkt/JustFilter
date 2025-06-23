@@ -32,12 +32,16 @@ public class ConfigButtonHandler : InteractionModuleBase<SocketInteractionContex
     public async Task DeleteConfigButton()
     {
         var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
-        if (configs != null)
+        if (configs != null && configs.Count != 0)
         {
             await RespondAsync(
                 embed: DeleteConfigPrinter.PrintDeleteMessage(),
                 components: DeleteConfigPrinter.BuildConfigDeleteComponents(configs)
             );
+        }
+        else
+        {
+            await RespondAsync(embed: DeleteConfigPrinter.CreateFirstConfig());
         }
     }
 
@@ -45,12 +49,16 @@ public class ConfigButtonHandler : InteractionModuleBase<SocketInteractionContex
     public async Task EditConfigButton()
     {
         var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
-        if (configs != null)
+        if (configs != null && configs.Count != 0)
         {
             await RespondAsync(
                 embed: EditConfigPrinter.PrintStartUpdateMessage(),
                 components: EditConfigPrinter.BuildStartConfigEditComponents(configs)
             );
+        }
+        else
+        {
+            await RespondAsync(embed: EditConfigPrinter.CreateFirstConfig());
         }
     }
 
