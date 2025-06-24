@@ -27,7 +27,7 @@ public class SetupMenuHandler : InteractionModuleBase<SocketInteractionContext>
 
         if (selectedConfigs.Length == 0)
         {
-            await RespondAsync("No configurations selected.");
+            await RespondAsync("No configurations selected.", ephemeral: true);
             return;
         }
 
@@ -50,12 +50,12 @@ public class SetupMenuHandler : InteractionModuleBase<SocketInteractionContext>
             result.ChannelData.ConfigsIds = configIds;
             await _channelRepository.UpdateChannel(result.ChannelData);
             await _redisContext.UpdateConfigsAsync(guild.Id, channel.Id, configs);
-            await RespondAsync("Channel configurations have been updated.");
+            await RespondAsync("Channel configurations have been updated.", ephemeral: true);
         }
         else
         {
             await _redisContext.AddConfigsAsync(guild.Id, channel.Id, configs);
-            await RespondAsync("Channel configurations have been added.");
+            await RespondAsync("Channel configurations have been added.", ephemeral: true);
         }
     }
 }

@@ -24,7 +24,7 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
             .AddTextInput("Config Description", "config_description", TextInputStyle.Paragraph,
                 placeholder: "Filter messages about religion");
 
-        await RespondWithModalAsync(modal.Build());
+        await RespondWithModalAsync(modal.Build(), options: RequestOptions.Default);
     }
 
     [SlashCommand("config-delete", "Remove a config")]
@@ -34,13 +34,14 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
         if (configs != null && configs.Count != 0)
         {
             await RespondAsync(
-                embed: DeleteConfigPrinter.PrintDeleteMessage(), 
-                components: DeleteConfigPrinter.BuildConfigDeleteComponents(configs)
+                embed: DeleteConfigPrinter.PrintDeleteMessage(),
+                components: DeleteConfigPrinter.BuildConfigDeleteComponents(configs),
+                ephemeral: true
             );
         }
         else
         {
-            await RespondAsync(embed: DeleteConfigPrinter.CreateFirstConfig());
+            await RespondAsync(embed: DeleteConfigPrinter.CreateFirstConfig(), ephemeral: true);
         }
     }
 
@@ -50,7 +51,7 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
         var guild = Context.Guild;
         var result = await _configRepository.GetAllConfigs(guild.Id);
         if (result == null || result.Count == 0) await RespondAsync("No configs found, create a new one");
-        else await RespondAsync(embed: GetAllConfigsPrinter.PrintConfigs(result));
+        else await RespondAsync(embed: GetAllConfigsPrinter.PrintConfigs(result), ephemeral: true);
     }
 
     [SlashCommand("config-update", "Update a config")]
@@ -61,11 +62,12 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
         {
             await RespondAsync(
                 embed: EditConfigPrinter.PrintStartUpdateMessage(), 
-                components: EditConfigPrinter.BuildStartConfigEditComponents(configs)
+                components: EditConfigPrinter.BuildStartConfigEditComponents(configs),
+                ephemeral: true
             );
         } else
         {
-            await RespondAsync(embed: EditConfigPrinter.CreateFirstConfig());
+            await RespondAsync(embed: EditConfigPrinter.CreateFirstConfig(), ephemeral: true);
         }
     }
 }

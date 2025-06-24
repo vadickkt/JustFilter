@@ -35,12 +35,13 @@ public class ConfigButtonHandler : InteractionModuleBase<SocketInteractionContex
         {
             await RespondAsync(
                 embed: DeleteConfigPrinter.PrintDeleteMessage(),
-                components: DeleteConfigPrinter.BuildConfigDeleteComponents(configs)
+                components: DeleteConfigPrinter.BuildConfigDeleteComponents(configs),
+                ephemeral: true
             );
         }
         else
         {
-            await RespondAsync(embed: DeleteConfigPrinter.CreateFirstConfig());
+            await RespondAsync(embed: DeleteConfigPrinter.CreateFirstConfig(), ephemeral: true);
         }
     }
 
@@ -52,12 +53,13 @@ public class ConfigButtonHandler : InteractionModuleBase<SocketInteractionContex
         {
             await RespondAsync(
                 embed: EditConfigPrinter.PrintStartUpdateMessage(),
-                components: EditConfigPrinter.BuildStartConfigEditComponents(configs)
+                components: EditConfigPrinter.BuildStartConfigEditComponents(configs),
+                ephemeral: true
             );
         }
         else
         {
-            await RespondAsync(embed: EditConfigPrinter.CreateFirstConfig());
+            await RespondAsync(embed: EditConfigPrinter.CreateFirstConfig(), ephemeral: true);
         }
     }
 

@@ -23,28 +23,22 @@ public class ManageCommands : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("setup", "Setup JustFilter in a channel")]
     public async Task SetupAsync()
     {
-        try
+        var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
+        if (configs != null && configs.Count != 0)
         {
-            var configs = await _configRepository.GetAllConfigs(Context.Guild.Id);
-            if (configs != null && configs.Count != 0)
-            {
-                await RespondAsync(
-                    embed: SetupPrinter.BuildListOfAvailableConfigs(configs),
-                    components: SetupPrinter.BuildSetupComponents(configs)
-                );
-            }
-            else
-            {
-                await RespondAsync(
-                    embed: SetupPrinter.BuildHelpMessage(),
-                    components: SetupPrinter.BuildHelpButtons()
-                );
-            }
+            await RespondAsync(
+                embed: SetupPrinter.BuildListOfAvailableConfigs(configs),
+                components: SetupPrinter.BuildSetupComponents(configs),
+                ephemeral: true
+            );
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"Error in /setup: {ex}");
-            await RespondAsync("Ein Fehler ist aufgetreten.");
+            await RespondAsync(
+                embed: SetupPrinter.BuildHelpMessage(),
+                components: SetupPrinter.BuildHelpButtons(),
+                ephemeral: true
+            );
         }
     }
 
@@ -57,6 +51,6 @@ public class ManageCommands : InteractionModuleBase<SocketInteractionContext>
 
         await _channelRepository.DeleteConfigsInChannel(guildId, channelId);
         await _redisContext.RemoveConfigsAsync(guildId, channelId);
-        await RespondAsync("Configs have been stopped");
+        await RespondAsync("Configs have been stopped", ephemeral: true);
     }
 }
