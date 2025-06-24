@@ -52,6 +52,6 @@ public class ManageCommands : BaseCommandModule
 
         await _channelRepository.DeleteConfigsInChannel(guildId, channelId);
         await _redisContext.RemoveConfigsAsync(guildId, channelId);
-        await RespondAsync("Configs have been stopped", ephemeral: true);
+        await RespondAsync(embed: TerminateCommandPrinter.CreateTerminateCommand(), ephemeral: true);
     }
 }

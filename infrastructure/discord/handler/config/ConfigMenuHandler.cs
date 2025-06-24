@@ -30,7 +30,7 @@ public class ConfigMenuHandler : InteractionModuleBase<SocketInteractionContext>
             await _channelRepository.DeleteConfigInChannel(Context.Guild.Id, Context.Channel.Id, objectId);
             await _redisContext.RemoveConfigAsync(Context.Guild.Id, Context.Channel.Id, objectId);
         }
-        await RespondAsync("These configs have been successfully deleted", ephemeral: true);
+        await RespondAsync(embed: DeleteConfigPrinter.PrintConfigWasDeleted(), ephemeral: true);
     }
     
     [ComponentInteraction("edit_config_menu")]

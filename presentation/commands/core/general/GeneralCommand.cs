@@ -9,7 +9,8 @@ public class GeneralCommand : BaseCommandModule
     [SlashCommand("ping", "Check bot latency")]
     public async Task PingAsync()
     {
-        await RespondAsync($"🏓 Pong! Latency: {Context.Client.Latency}ms", ephemeral: true);
+        var latency = Context.Client.Latency;
+        await RespondAsync(embed: PingCommandPrinter.CreateRespondWithLatency(latency), ephemeral: true);
     }
 
     [SlashCommand("help", "Show help menu")]

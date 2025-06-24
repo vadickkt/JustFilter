@@ -2,6 +2,7 @@ using Discord.Interactions;
 using JustFilter.infrastructure.datastore.mongo.config;
 using JustFilter.infrastructure.datastore.redis;
 using JustFilter.presentation.commands.entities.config;
+using JustFilter.presentation.printers.config;
 using MongoDB.Bson;
 
 namespace JustFilter.infrastructure.discord.handler.config;
@@ -31,7 +32,8 @@ public class ConfigModalHandler : InteractionModuleBase<SocketInteractionContext
                 Description = modal.ConfigDescription,
             };
             await _configRepository.AddConfig(configData);
-            await RespondAsync($"Config {configData.Name} has been saved.", ephemeral: true);
+            var configName = configData.Name;
+            await RespondAsync(embed: AddConfigPrinter.PrintConfigWasCreated(configName), ephemeral: true);
         }
     }
 
@@ -43,7 +45,7 @@ public class ConfigModalHandler : InteractionModuleBase<SocketInteractionContext
         oldConfig.Name = modal.NewConfigName;
         await _configRepository.UpdateConfig(parsedConfigId, oldConfig);
         await _redisContext.UpdateConfigAsync(Context.Guild.Id, Context.Channel.Id, oldConfig);
-        await RespondAsync($"Config {configId} has been updated.", ephemeral: true);
+        await RespondAsync(embed: EditConfigPrinter.PrintConfigWasUpdated(configId), ephemeral: true);
     }
 
     [ModalInteraction("new_config_description_modal:*")]
@@ -54,6 +56,6 @@ public class ConfigModalHandler : InteractionModuleBase<SocketInteractionContext
         oldConfig.Description = modal.NewConfigDescription;
         await _configRepository.UpdateConfig(parsedConfigId, oldConfig);
         await _redisContext.UpdateConfigAsync(Context.Guild.Id, Context.Channel.Id, oldConfig);
-        await RespondAsync($"Config {configId} has been updated.", ephemeral: true);
+        await RespondAsync(embed: EditConfigPrinter.PrintConfigWasUpdated(configId), ephemeral: true);
     }
 }

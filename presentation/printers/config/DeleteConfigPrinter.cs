@@ -1,5 +1,6 @@
 using Discord;
 using JustFilter.data.utils;
+using JustFilter.infrastructure.ai.model;
 using JustFilter.infrastructure.datastore.mongo.config;
 
 namespace JustFilter.presentation.printers.config;
@@ -24,6 +25,16 @@ public static class DeleteConfigPrinter
             .WithDescription("Select the config you want to delete");
 
         return embedBuilder.Build();
+    }
+
+    public static Embed PrintConfigWasDeleted()
+    {
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle("These configs have been successfully deleted")
+            .WithColor(Color.Green)
+            .Build();
+        
+        return embedBuilder;
     }
 
     public static MessageComponent BuildConfigDeleteComponents(List<ConfigData> configs)

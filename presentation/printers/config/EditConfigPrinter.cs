@@ -6,6 +6,15 @@ namespace JustFilter.presentation.printers.config;
 
 public static class EditConfigPrinter 
 {
+    public static Embed PrintConfigWasUpdated(string configId)
+    {
+        var embed = new EmbedBuilder()
+            .WithTitle($"Config {configId} has been updated.")
+            .WithColor(Color.Green);
+        
+        return embed.Build();
+    }
+    
     public static Embed CreateFirstConfig()
     {
         var embedBuilder = new EmbedBuilder()

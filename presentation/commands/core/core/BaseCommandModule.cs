@@ -1,6 +1,7 @@
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using JustFilter.presentation.printers.common;
 
 namespace JustFilter.presentation.commands.core.core;
 
@@ -14,15 +15,7 @@ public abstract class BaseCommandModule : InteractionModuleBase<SocketInteractio
 
         if (user == null || user.Roles.All(role => role.Name != RequiredRole))
         {
-            var embed = new EmbedBuilder()
-                .WithTitle("Failure")
-                .WithColor(Color.Blue)
-                .WithDescription(
-                    "You do not have permission to execute this command\n" +
-                    "You need **JustFilterAdmin** rule to run this bot"
-                )
-                .Build();
-            await RespondAsync(embed: embed, ephemeral: true);
+            await RespondAsync(embed: BaseCommandPrinter.CreateMessageNoPermission(), ephemeral: true);
             throw new Exception("User does not have permission.");
         }
 
