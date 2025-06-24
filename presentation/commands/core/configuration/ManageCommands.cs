@@ -2,11 +2,12 @@ using Discord.Interactions;
 using JustFilter.infrastructure.datastore.mongo.channel;
 using JustFilter.infrastructure.datastore.mongo.config;
 using JustFilter.infrastructure.datastore.redis;
+using JustFilter.presentation.commands.core.core;
 using JustFilter.presentation.printers.setup;
 
 namespace JustFilter.presentation.commands.core.configuration;
 
-public class ManageCommands : InteractionModuleBase<SocketInteractionContext>
+public class ManageCommands : BaseCommandModule
 {
     private readonly ConfigRepository _configRepository;
     private readonly ChannelRepository _channelRepository;

@@ -1,11 +1,12 @@
 using Discord;
 using Discord.Interactions;
 using JustFilter.infrastructure.datastore.mongo.config;
+using JustFilter.presentation.commands.core.core;
 using JustFilter.presentation.printers.config;
 
 namespace JustFilter.presentation.commands.core.configuration;
 
-public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
+public class ConfigCommands : BaseCommandModule
 {
     private readonly ConfigRepository _configRepository;
 
