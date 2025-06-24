@@ -1,3 +1,4 @@
+using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 
@@ -13,7 +14,15 @@ public abstract class BaseCommandModule : InteractionModuleBase<SocketInteractio
 
         if (user == null || user.Roles.All(role => role.Name != RequiredRole))
         {
-            await RespondAsync("You do not have permission to execute this command.", ephemeral: true);
+            var embed = new EmbedBuilder()
+                .WithTitle("Failure")
+                .WithColor(Color.Blue)
+                .WithDescription(
+                    "You do not have permission to execute this command\n" +
+                    "You need **JustFilterAdmin** rule to run this bot"
+                )
+                .Build();
+            await RespondAsync(embed: embed, ephemeral: true);
             throw new Exception("User does not have permission.");
         }
 
