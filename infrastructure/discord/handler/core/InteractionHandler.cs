@@ -92,23 +92,7 @@ public class InteractionHandler
             var configs = _redisContext.GetConfigsAsync(serverId.Value, channelId).Result;
             var prompt = OllamaConst.Prompt(messageText, configs);
 
-            var ollamaRequest = new OllamaGenerateRequest
-            {
-                model = "deepseek-r1:latest",
-                prompt = prompt,
-                stream = false,
-                format = new FormatRequest
-                {
-                    type = "object",
-                    properties = new Dictionary<string, FormatProperty>
-                    {
-                        { "matches", new FormatProperty { type = "boolean" } },
-                        { "category", new FormatProperty { type = new[] { "string", "null" } } },
-                        { "reason", new FormatProperty { type = new[] { "string", "null" } } }
-                    },
-                    required = ["matches", "category", "reason"]
-                }
-            };
+            var ollamaRequest = OllamaGenerateRequest.Default(prompt);
             var result = await _ollamaHttpClient.GenerateAsync(ollamaRequest);
 
             if (result == null)
