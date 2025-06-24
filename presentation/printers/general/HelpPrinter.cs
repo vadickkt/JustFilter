@@ -1,6 +1,6 @@
-namespace JustFilter.presentation.printers.general;
-
 using Discord;
+
+namespace JustFilter.presentation.printers.general;
 
 public static class HelpPrinter
 {

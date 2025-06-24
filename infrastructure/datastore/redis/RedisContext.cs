@@ -1,7 +1,6 @@
 using System.Text.Json;
 using JustFilter.data.converter;
 using JustFilter.infrastructure.datastore.mongo.config;
-using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using StackExchange.Redis;
 

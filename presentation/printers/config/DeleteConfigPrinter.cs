@@ -1,6 +1,5 @@
 using Discord;
 using JustFilter.data.utils;
-using JustFilter.infrastructure.ai.model;
 using JustFilter.infrastructure.datastore.mongo.config;
 
 namespace JustFilter.presentation.printers.config;
